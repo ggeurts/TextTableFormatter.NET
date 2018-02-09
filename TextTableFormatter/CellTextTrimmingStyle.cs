@@ -1,18 +1,18 @@
 namespace TextTableFormatter
 {
-  /// <summary>
-  /// Represents a cell content trimming style
-  /// </summary>
-  public enum CellTextTrimmingStyle
-  {
     /// <summary>
-    /// Crop the text
+    /// Represents a cell content trimming style
     /// </summary>
-    Crop,
+    public enum CellTextTrimmingStyle
+    {
+        /// <summary>
+        /// Crop the text
+        /// </summary>
+        Crop,
 
-    /// <summary>
-    /// Trim text with dots
-    /// </summary>
-    Dots
-  };
+        /// <summary>
+        /// Trim text with dots
+        /// </summary>
+        Dots
+    };
 }

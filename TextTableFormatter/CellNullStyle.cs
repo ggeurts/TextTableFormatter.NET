@@ -1,18 +1,18 @@
 namespace TextTableFormatter
 {
-  /// <summary>
-  /// Represents the cell null text style
-  /// </summary>
-  public enum CellNullStyle
-  {
     /// <summary>
-    /// The empty string
+    /// Represents the cell null text style
     /// </summary>
-    EmptyString,
+    public enum CellNullStyle
+    {
+        /// <summary>
+        /// The empty string
+        /// </summary>
+        EmptyString,
 
-    /// <summary>
-    /// The null text: [null]
-    /// </summary>
-    NullText
-  };
+        /// <summary>
+        /// The null text: [null]
+        /// </summary>
+        NullText
+    };
 }
