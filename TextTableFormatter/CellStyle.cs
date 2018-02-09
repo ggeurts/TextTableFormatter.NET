@@ -2,16 +2,13 @@ using System.Text;
 
 namespace TextTableFormatter
 {
+    using System;
+
     /// <summary>
     /// Represents a cell style
     /// </summary>
     public class CellStyle
     {
-        private const CellHorizontalAlignment DEFAULT_HORIZONTAL_ALIGN = CellHorizontalAlignment.Left;
-        private const CellTextTrimmingStyle DEFAULT_ABBREVIATION_STYLE = CellTextTrimmingStyle.Dots;
-        private const CellNullStyle DEFAULT_NULL_STYLE = CellNullStyle.EmptyString;
-        private const bool DEFAULT_HANDLE_TERMINAL_FORMATS = true;
-
         private const string NULL_TEXT = "<null>";
         private const string DOTS_TEXT = "...";
         private const char ESC = (char) 27;
@@ -22,78 +19,36 @@ namespace TextTableFormatter
         /// <summary>
         /// Gets or sets the cell horizontal alignment
         /// </summary>
-        public CellHorizontalAlignment HorizontalAlignment { get; set; }
+        public CellHorizontalAlignment HorizontalAlignment { get; set; } = CellHorizontalAlignment.Left;
 
         /// <summary>
-        /// Gets or sets the cell abbreviation style
+        /// Gets or sets the cell content abbreviation style
         /// </summary>
-        public CellTextTrimmingStyle TextTrimmingStyle { get; set; }
+        public CellTextTrimmingStyle TextTrimmingStyle { get; set; } = CellTextTrimmingStyle.Dots;
+
+        /// <summary>
+        /// Gets or sets the cell content wrapping style
+        /// </summary>
+        public CellTextWrappingStyle TextWrappingStyle { get; set; } = CellTextWrappingStyle.NoWrap;
 
         /// <summary>
         /// Gets or sets the cell null style
         /// </summary>
-        public CellNullStyle NullStyle { get; set; }
+        public CellNullStyle NullStyle { get; set; } = CellNullStyle.EmptyString;
 
         /// <summary>
         /// Initialize a new instance of CellStyle class
         /// </summary>
         public CellStyle()
-        {
-            Initialize(DEFAULT_HORIZONTAL_ALIGN, DEFAULT_ABBREVIATION_STYLE, DEFAULT_NULL_STYLE,
-                DEFAULT_HANDLE_TERMINAL_FORMATS);
-        }
+            : this(true)
+        {}
 
         /// <summary>
         /// Initialize a new instance of CellStyle class
         /// </summary>
-        /// <param name="horizontalAlignment">The cell horizontal alignment</param>
-        public CellStyle(CellHorizontalAlignment horizontalAlignment)
-        {
-            Initialize(horizontalAlignment, DEFAULT_ABBREVIATION_STYLE, DEFAULT_NULL_STYLE,
-                DEFAULT_HANDLE_TERMINAL_FORMATS);
-        }
-
-        /// <summary>
-        /// Initialize a new instance of CellStyle class
-        /// </summary>
-        /// <param name="horizontalAlignment">The cell horizontal alignment</param>
-        /// <param name="textTrimmingStyle">The cell text trimming style</param>
-        public CellStyle(CellHorizontalAlignment horizontalAlignment, CellTextTrimmingStyle textTrimmingStyle)
-        {
-            Initialize(horizontalAlignment, textTrimmingStyle, DEFAULT_NULL_STYLE, DEFAULT_HANDLE_TERMINAL_FORMATS);
-        }
-
-        /// <summary>
-        /// Initialize a new instance of CellStyle class
-        /// </summary>
-        /// <param name="horizontalAlignment">The cell horizontal alignment</param>
-        /// <param name="textTrimmingStyle">The cell text trimming style</param>
-        /// <param name="nullStyle">The cell null style</param>
-        public CellStyle(CellHorizontalAlignment horizontalAlignment, CellTextTrimmingStyle textTrimmingStyle,
-            CellNullStyle nullStyle)
-        {
-            Initialize(horizontalAlignment, textTrimmingStyle, nullStyle, DEFAULT_HANDLE_TERMINAL_FORMATS);
-        }
-
-        /// <summary>
-        /// Initialize a new instance of CellStyle class
-        /// </summary>
-        /// <param name="horizontalAlignment">The cell horizontal alignment</param>
-        /// <param name="textTrimmingStyle">The cell text trimming style</param>
-        /// <param name="nullStyle">The cell null style</param>
         /// <param name="removeTerminalFormats">True: terminal formats will be removed</param>
-        public CellStyle(CellHorizontalAlignment horizontalAlignment, CellTextTrimmingStyle textTrimmingStyle,
-            CellNullStyle nullStyle, bool removeTerminalFormats)
+        public CellStyle(bool removeTerminalFormats)
         {
-            Initialize(horizontalAlignment, textTrimmingStyle, nullStyle, removeTerminalFormats);
-        }
-
-        private void Initialize(CellHorizontalAlignment horAlign, CellTextTrimmingStyle textTrimmingStyle,
-            CellNullStyle nullStyle, bool removeTerminalFormats)
-        {
-            this.HorizontalAlignment = horAlign;
-            this.TextTrimmingStyle = textTrimmingStyle;
-            this.NullStyle = nullStyle;
             _removeTerminalFormats = removeTerminalFormats;
         }
 
@@ -109,7 +64,7 @@ namespace TextTableFormatter
         {
             var plainText = RenderUncroppedText(text);
             var uc = RenderUnclosedContent(text, width, plainText);
-            if (_removeTerminalFormats && uc.IndexOf("[") != -1) return uc + FORMAT_RESET_SEQUENCE;
+            if (_removeTerminalFormats && uc.IndexOf("[", StringComparison.Ordinal) != -1) return uc + FORMAT_RESET_SEQUENCE;
             return uc;
         }
 

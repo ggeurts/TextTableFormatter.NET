@@ -10,8 +10,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("TableColSpanTests")]
         public void TestWideNullCell()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var table = new TextTable(5, TableBordersStyle.CLASSIC, TableVisibleBorders.ALL, false, "");
             table.AddCell(null, cellStyle, 5);
 
@@ -25,8 +29,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("TableColSpanTests")]
         public void TestWideIncompleteNullCell()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var table = new TextTable(7, TableBordersStyle.CLASSIC, TableVisibleBorders.ALL, false, string.Empty);
             table.AddCell(null, cellStyle, 3);
 
@@ -40,11 +48,24 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("TableColSpanTests")]
         public void TestSetColSpan()
         {
-            var cs = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop, CellNullStyle.EmptyString);
-            var csr = new CellStyle(CellHorizontalAlignment.Right, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
-            var csc = new CellStyle(CellHorizontalAlignment.Center, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cs = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
+            var csr = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Right,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
+            var csc = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Center,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var table = new TextTable(2, TableBordersStyle.CLASSIC, TableVisibleBorders.ALL, false, "");
             table.Columns.ElementAt(0).SetWidthRange(6, 10);
             table.Columns.ElementAt(1).SetWidthRange(2, 7);
@@ -71,10 +92,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("TableColSpanTests")]
         public void TestCenteredColSpan()
         {
-            var cellStyle1 = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
-            var cellStyle2 = new CellStyle(CellHorizontalAlignment.Right, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle1 = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
 
             var table = new TextTable(4, TableBordersStyle.CLASSIC, TableVisibleBorders.ALL, false, string.Empty);
             table.Columns[0].SetWidthRange(3, 10);
@@ -109,10 +132,18 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("TableColSpanTests")]
         public void TestSetColSpanWide()
         {
-            var cellStyle1 = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
-            var cellStyle2 = new CellStyle(CellHorizontalAlignment.Right, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle1 = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
+            var cellStyle2 = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Right,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var textTable = new TextTable(2, TableBordersStyle.CLASSIC_WIDE, TableVisibleBorders.ALL, false, "");
             textTable.Columns[0].SetWidthRange(6, 10);
             textTable.Columns[1].SetWidthRange(2, 7);
@@ -136,8 +167,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("TableColSpanTests")]
         public void TestTooWideCell()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var table = new TextTable(3, TableBordersStyle.CLASSIC, TableVisibleBorders.ALL, false, "");
             table.AddCell("abc", cellStyle, 5);
             table.AddCell("defg", cellStyle, 5);

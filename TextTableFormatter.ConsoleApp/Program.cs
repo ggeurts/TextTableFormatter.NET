@@ -30,7 +30,7 @@ namespace TextTableFormatter.ConsoleApp
 
 
             // 2. ADVANCED TABLE EXAMPLE
-            var numberStyleAdvancedTable = new CellStyle(CellHorizontalAlignment.Right);
+            var numberStyleAdvancedTable = new CellStyle { HorizontalAlignment = CellHorizontalAlignment.Right };
             var advancedTable = new TextTable(3, TableBordersStyle.DESIGN_FORMAL,
                 TableVisibleBorders.SURROUND_HEADER_FOOTER_AND_COLUMNS);
             advancedTable.SetColumnWidthRange(0, 6, 14);
@@ -70,7 +70,7 @@ namespace TextTableFormatter.ConsoleApp
 
 
             // 3. FANCY TABLE EXAMPLE
-            var numberStyleFancyTable = new CellStyle(CellHorizontalAlignment.Right);
+            var numberStyleFancyTable = new CellStyle { HorizontalAlignment = CellHorizontalAlignment.Right };
             var fancyTable = new TextTable(3, TableBordersStyle.DESIGN_PAPYRUS,
                 TableVisibleBorders.SURROUND_HEADER_FOOTER_AND_COLUMNS);
 
@@ -107,7 +107,7 @@ namespace TextTableFormatter.ConsoleApp
 
 
             // 4. UNICODE TABLE EXAMPLE
-            var numberStyleUnicodeTable = new CellStyle(CellHorizontalAlignment.Right);
+            var numberStyleUnicodeTable = new CellStyle { HorizontalAlignment = CellHorizontalAlignment.Right };
             var unicodeTable = new TextTable(3, TableBordersStyle.UNICODE_BOX_DOUBLE_BORDER_WIDE,
                 TableVisibleBorders.SURROUND_HEADER_FOOTER_AND_COLUMNS, true);
 

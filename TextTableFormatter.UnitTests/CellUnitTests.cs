@@ -9,8 +9,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestAlignLeft()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var cell = new Cell("abcdef", cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual("a", cell.Render(1));
@@ -30,8 +34,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestAlignCenter()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Center, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Center,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var cell = new Cell("abcdef", cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual("a", cell.Render(1));
@@ -51,8 +59,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestAlignRight()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Right, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Right,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var cell = new Cell("abcdef", cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual("a", cell.Render(1));
@@ -72,8 +84,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestAbbreviateCrop()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var cell = new Cell("abcdef", cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual("a", cell.Render(1));
@@ -89,8 +105,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestAbbreviateDots()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Dots,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Dots,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var cell = new Cell("abcdef", cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual(".", cell.Render(1));
@@ -106,8 +126,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestNullEmpty()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var cell = new Cell(null, cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual(" ", cell.Render(1));
@@ -122,8 +146,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestNullText()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.NullText);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.NullText
+            };
             var cell = new Cell(null, cellStyle, 1);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual("<", cell.Render(1));
@@ -142,7 +170,11 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("CellTests")]
         public void TestTerminalFormats()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop
+            };
             const char esc = (char) 27;
 
             var cell = new Cell("abc" + esc + "[23;45mdef", cellStyle, 1);

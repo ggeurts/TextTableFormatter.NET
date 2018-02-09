@@ -9,8 +9,12 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("RowTests")]
         public void TestSeparators()
         {
-            var cellStyle = new CellStyle(CellHorizontalAlignment.Left, CellTextTrimmingStyle.Crop,
-                CellNullStyle.EmptyString);
+            var cellStyle = new CellStyle
+            {
+                HorizontalAlignment = CellHorizontalAlignment.Left,
+                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
+                NullStyle = CellNullStyle.EmptyString
+            };
             var row = new Row();
             row.Cells.Add(new Cell("abc", cellStyle, 1));
             row.Cells.Add(new Cell("def", cellStyle, 1));
