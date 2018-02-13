@@ -31,8 +31,8 @@ namespace TextTableFormatter
                 var row = table.Rows[i];
                 var isFirst = i == 0;
                 var isSecond = i == 1;
-                var isIntermediate = (i > 1 && i < rowCount - 1);
-                var isLast = i == (rowCount - 1);
+                var isLast = i == rowCount - 1;
+                var isIntermediate = i > 1 && !isLast;
                 foreach (var line in RenderRow(row, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast))
                 {
                     yield return line;
@@ -52,8 +52,8 @@ namespace TextTableFormatter
                 var r = table.Rows[i];
                 var isFirst = i == 0;
                 var isSecond = i == 1;
-                var isIntermediate = (i > 1 && i < rowCount - 1);
-                var isLast = i == (rowCount - 1);
+                var isLast = i == rowCount - 1;
+                var isIntermediate = i > 1 && !isLast;
 
                 if (firstRenderedRow)
                 {

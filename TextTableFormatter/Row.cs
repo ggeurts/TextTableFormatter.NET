@@ -1,17 +1,15 @@
-using System.Collections.Generic;
-
 namespace TextTableFormatter
 {
+    using System.Collections.Generic;
+
     internal class Row
     {
-        internal IList<Cell> Cells { get; }
+        public IList<Cell> Cells { get; } = new List<Cell>();
 
-        public Row()
-        {
-            Cells = new List<Cell>();
-        }
-
-        internal int ColumnSpan
+        /// <summary>
+        /// Gets number of columns that are spanned by this row
+        /// </summary>
+        public int ColumnSpan
         {
             get
             {

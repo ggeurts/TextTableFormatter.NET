@@ -1,7 +1,6 @@
-using System;
-
 namespace TextTableFormatter
 {
+    using System;
     using System.Text;
 
     /// <summary>
