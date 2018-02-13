@@ -1,11 +1,12 @@
 namespace TextTableFormatter
 {
+    using System;
     using System.Collections.Generic;
     using System.Text;
 
     public class TableStyle
     {
-        private readonly string _prompt;
+        private readonly int _leftMargin;
 
         /// <summary>
         /// Gets the table border style
@@ -18,7 +19,7 @@ namespace TextTableFormatter
         {
             this.BorderStyle = borderStyle ?? TableBorderStyle.CLASSIC;
             this.BorderVisibility = borderVisibility ?? TableBorderVisibility.SURROUND_HEADER_AND_COLUMNS;
-            _prompt = leftMargin > 0 ? new string(' ', leftMargin) : string.Empty;
+            _leftMargin = Math.Max(leftMargin, 0);
         }
 
         internal IEnumerable<string> RenderLines(TextTable table)
@@ -71,13 +72,13 @@ namespace TextTableFormatter
 
         private IEnumerable<string> RenderRow(Row row, Row previousRow, IList<Column> columns, bool isFirst, bool isSecond, bool isIntermediate, bool isLast)
         {
-            var sb = new StringBuilder(_prompt, 80);
+            var sb = new StringBuilder(80).Append(' ', _leftMargin);
 
             if (isFirst)
             {
                 if (this.BorderVisibility.IsTopBorderVisible)
                 {
-                    sb.Length = _prompt.Length;
+                    sb.Length = _leftMargin;
                     this.BorderVisibility.RenderTopBorder(sb, columns, BorderStyle, row);
                     yield return sb.ToString();
                 }
@@ -88,7 +89,7 @@ namespace TextTableFormatter
                     || isSecond && this.BorderVisibility.IsHeaderSeparatorVisible 
                     || isLast && this.BorderVisibility.IsFooterSeparatorVisible)
                 {
-                    sb.Length = _prompt.Length;
+                    sb.Length = _leftMargin;
                     this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, previousRow, row);
                     yield return sb.ToString();
                 }
@@ -96,7 +97,7 @@ namespace TextTableFormatter
 
             for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
             {
-                sb.Length = _prompt.Length;
+                sb.Length = _leftMargin;
                 RenderRowContent(sb, columns, row, lineIndex);
                 yield return sb.ToString();
             }
@@ -105,7 +106,7 @@ namespace TextTableFormatter
             {
                 if (this.BorderVisibility.IsBottomBorderVisible)
                 {
-                    sb.Length = _prompt.Length;
+                    sb.Length = _leftMargin;
                     this.BorderVisibility.RenderBottomBorder(sb, columns, BorderStyle, row);
                     yield return sb.ToString();
                 }
@@ -119,7 +120,7 @@ namespace TextTableFormatter
             {
                 if (this.BorderVisibility.IsTopBorderVisible)
                 {
-                    sb.Append(_prompt);
+                    sb.Append(' ', _leftMargin);
                     this.BorderVisibility.RenderTopBorder(sb, columns, BorderStyle, row);
                     linesWritten++;
                 }
@@ -130,7 +131,7 @@ namespace TextTableFormatter
                     || isSecond && this.BorderVisibility.IsHeaderSeparatorVisible
                     || isLast && this.BorderVisibility.IsFooterSeparatorVisible)
                 {
-                    sb.Append(_prompt);
+                    sb.Append(' ', _leftMargin);
                     this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, previousRow, row);
                     linesWritten++;
                 }
@@ -139,7 +140,7 @@ namespace TextTableFormatter
             for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
             {
                 if (linesWritten > 0) sb.AppendLine();
-                sb.Append(_prompt);
+                sb.Append(' ', _leftMargin);
                 RenderRowContent(sb, columns, row, lineIndex);
                 linesWritten++;
             }
@@ -149,7 +150,7 @@ namespace TextTableFormatter
                 if (this.BorderVisibility.IsBottomBorderVisible)
                 {
                     if (linesWritten > 0) sb.AppendLine();
-                    sb.Append(_prompt);
+                    sb.Append(' ', _leftMargin);
                     this.BorderVisibility.RenderBottomBorder(sb, columns, BorderStyle, row);
                 }
             }
