@@ -1,21 +1,21 @@
 ﻿namespace TextTableFormatter.UnitTests
 {
     using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
-    [TestClass]
+    [TestFixture]
     public class TableUnitTests
     {
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestEmpty()
         {
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(10);
             Assert.AreEqual("", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestOneCell()
         {
             var cellStyle = new CellStyle();
@@ -28,8 +28,8 @@
                             + "+------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestNullCell()
         {
             var cellStyle = new CellStyle();
@@ -41,8 +41,8 @@
                             + "++", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestEmptyCell()
         {
             var cellStyle = new CellStyle();
@@ -54,8 +54,8 @@
                             + "++", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestTwoCellsHorizontal()
         {
             var cellStyle = new CellStyle();
@@ -69,8 +69,8 @@
                             + "+------+------+", textTable.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestTwoCellsVertical()
         {
             var cellStyle = new CellStyle();
@@ -86,8 +86,8 @@
                             + "+------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestMarginSpaces()
         {
             var cellStyle = new CellStyle();
@@ -103,8 +103,8 @@
                             + "    +------+", textTable.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestAutomaticWidth()
         {
             var cellStyle = new CellStyle();
@@ -126,8 +126,8 @@
                             + "+-------+--------+", textTable.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestSetWidth()
         {
             var cellStyle = new CellStyle();
@@ -152,8 +152,8 @@
                             + "+------+-------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestMissingCell()
         {
             var cellStyle = new CellStyle();
@@ -177,8 +177,8 @@
                             + "+------+------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestCellWithLineBreaks()
         {
             var csl = new CellStyle();
@@ -200,8 +200,8 @@
                             + "+------+------+------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableTests")]
+        [Test]
+        [Category("TableTests")]
         public void TestCellWithTextWrapping()
         {
             var csl = new CellStyle(textWrapping: CellTextWrappingStyle.Wrap);

@@ -1,13 +1,13 @@
 namespace TextTableFormatter.UnitTests
 {
     using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
-    [TestClass]
+    [TestFixture]
     public class TableColSpanUnitTests
     {
-        [TestMethod]
-        [TestCategory("TableColSpanTests")]
+        [Test]
+        [Category("TableColSpanTests")]
         public void TestWideNullCell()
         {
             var cellStyle = new CellStyle();
@@ -20,8 +20,8 @@ namespace TextTableFormatter.UnitTests
                             + "+----+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableColSpanTests")]
+        [Test]
+        [Category("TableColSpanTests")]
         public void TestWideIncompleteNullCell()
         {
             var cellStyle = new CellStyle();
@@ -34,8 +34,8 @@ namespace TextTableFormatter.UnitTests
                             + "+--+++++", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableColSpanTests")]
+        [Test]
+        [Category("TableColSpanTests")]
         public void TestSetColSpan()
         {
             var cs = new CellStyle();
@@ -63,8 +63,8 @@ namespace TextTableFormatter.UnitTests
                             + "+-------------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableColSpanTests")]
+        [Test]
+        [Category("TableColSpanTests")]
         public void TestCenteredColSpan()
         {
             var cellStyle1 = new CellStyle();
@@ -99,8 +99,8 @@ namespace TextTableFormatter.UnitTests
                             + "+----+------+----+------+", table.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableColSpanTests")]
+        [Test]
+        [Category("TableColSpanTests")]
         public void TestSetColSpanWide()
         {
             var cellStyle1 = new CellStyle();
@@ -124,8 +124,8 @@ namespace TextTableFormatter.UnitTests
                             + "+-----------------+", textTable.Render());
         }
 
-        [TestMethod]
-        [TestCategory("TableColSpanTests")]
+        [Test]
+        [Category("TableColSpanTests")]
         public void TestTooWideCell()
         {
             var cellStyle = new CellStyle();

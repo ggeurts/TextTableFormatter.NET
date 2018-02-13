@@ -1,12 +1,12 @@
 namespace TextTableFormatter.UnitTests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
-    [TestClass]
+    [TestFixture]
     public class RowUnitTests
     {
-        [TestMethod]
-        [TestCategory("RowTests")]
+        [Test]
+        [Category("RowTests")]
         public void TestSeparators()
         {
             var cellStyle = new CellStyle();

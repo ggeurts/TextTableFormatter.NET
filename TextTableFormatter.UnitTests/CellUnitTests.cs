@@ -1,12 +1,12 @@
 namespace TextTableFormatter.UnitTests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
-    [TestClass]
+    [TestFixture]
     public class CellUnitTests
     {
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestAlignLeft()
         {
             var cellStyle = new CellStyle();
@@ -25,8 +25,8 @@ namespace TextTableFormatter.UnitTests
             Assert.AreEqual("abcdef     ", cell.Render(11));
         }
 
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestAlignCenter()
         {
             var cellStyle = new CellStyle(CellTextAlignment.Center);
@@ -45,8 +45,8 @@ namespace TextTableFormatter.UnitTests
             Assert.AreEqual("  abcdef   ", cell.Render(11));
         }
 
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestAlignRight()
         {
             var cellStyle = new CellStyle(CellTextAlignment.Right);
@@ -65,8 +65,8 @@ namespace TextTableFormatter.UnitTests
             Assert.AreEqual("     abcdef", cell.Render(11));
         }
 
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestAbbreviateCrop()
         {
             var cellStyle = new CellStyle();
@@ -81,8 +81,8 @@ namespace TextTableFormatter.UnitTests
             Assert.AreEqual("abcdef ", cell.Render(7));
         }
 
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestAbbreviateDots()
         {
             var cellStyle = new CellStyle(textTrimming: CellTextTrimmingStyle.Dots);
@@ -97,8 +97,8 @@ namespace TextTableFormatter.UnitTests
             Assert.AreEqual("abcdef ", cell.Render(7));
         }
 
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestNullEmpty()
         {
             var cellStyle = new CellStyle();
@@ -112,8 +112,8 @@ namespace TextTableFormatter.UnitTests
             Assert.AreEqual("           ", cell.Render(11));
         }
 
-        [TestMethod]
-        [TestCategory("CellTests")]
+        [Test]
+        [Category("CellTests")]
         public void TestNullText()
         {
             var cellStyle = new CellStyle(nullText: "<null>");
