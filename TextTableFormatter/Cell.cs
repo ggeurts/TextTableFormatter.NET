@@ -124,7 +124,7 @@ namespace TextTableFormatter
         {
             if (string.IsNullOrEmpty(content)) return;
 
-            if (content.Length <= maxWidth || this.Style.TextWrapping == CellTextWrappingStyle.NoWrap)
+            if (content.Length <= maxWidth || this.Style.TextWrapping == CellTextWrapping.NoWrap)
             {
                 lines.Add(content);
                 return;

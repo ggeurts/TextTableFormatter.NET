@@ -204,9 +204,9 @@
         [Category("TableTests")]
         public void TestCellWithTextWrapping()
         {
-            var csl = new CellStyle(textWrapping: CellTextWrappingStyle.Wrap);
-            var csc = new CellStyle(CellTextAlignment.Center, textWrapping: CellTextWrappingStyle.Wrap);
-            var csr = new CellStyle(CellTextAlignment.Right, textWrapping: CellTextWrappingStyle.Wrap);
+            var csl = new CellStyle(textWrapping: CellTextWrapping.Wrap);
+            var csc = new CellStyle(CellTextAlignment.Center, textWrapping: CellTextWrapping.Wrap);
+            var csr = new CellStyle(CellTextAlignment.Right, textWrapping: CellTextWrapping.Wrap);
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
                 .AddColumn(6, 6)
                 .AddColumn(6, 6)

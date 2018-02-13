@@ -35,10 +35,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellTextWrappingStyle.cs" />
+    <Compile Include="CellTextWrapping.cs" />
     <Compile Include="TableBorderStyle.cs" />
     <Compile Include="Cell.cs" />
-    <Compile Include="CellTextTrimmingStyle.cs" />
+    <Compile Include="CellTextTrimming.cs" />
     <Compile Include="CellTextAlignment.cs" />
     <Compile Include="CellStyle.cs" />
     <Compile Include="Column.cs" />

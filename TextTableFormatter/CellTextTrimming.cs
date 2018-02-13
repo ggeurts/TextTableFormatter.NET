@@ -3,7 +3,7 @@ namespace TextTableFormatter
     /// <summary>
     /// Represents a cell content trimming style
     /// </summary>
-    public enum CellTextTrimmingStyle
+    public enum CellTextTrimming
     {
         /// <summary>
         /// Crop the text

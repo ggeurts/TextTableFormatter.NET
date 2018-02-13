@@ -17,19 +17,19 @@ namespace TextTableFormatter
         /// <summary>
         /// Gets or sets the cell content abbreviation style
         /// </summary>
-        public CellTextTrimmingStyle TextTrimming { get; }
+        public CellTextTrimming TextTrimming { get; }
 
         /// <summary>
         /// Gets or sets the cell content wrapping style
         /// </summary>
-        public CellTextWrappingStyle TextWrapping { get; }
+        public CellTextWrapping TextWrapping { get; }
 
         public string NullText { get; }
 
         public CellStyle(
             CellTextAlignment textAlignment = CellTextAlignment.Left, 
-            CellTextTrimmingStyle textTrimming = CellTextTrimmingStyle.Crop, 
-            CellTextWrappingStyle textWrapping = CellTextWrappingStyle.NoWrap,
+            CellTextTrimming textTrimming = CellTextTrimming.Crop, 
+            CellTextWrapping textWrapping = CellTextWrapping.NoWrap,
             string nullText = null)
         {
             this.TextAlignment = textAlignment;
@@ -81,7 +81,7 @@ namespace TextTableFormatter
         {
             switch (this.TextTrimming)
             {
-                case CellTextTrimmingStyle.Crop:
+                case CellTextTrimming.Crop:
                     sb.Append(line, 0, width);
                     break;
                 default:

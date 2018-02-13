@@ -85,7 +85,7 @@ namespace TextTableFormatter.UnitTests
         [Category("CellTests")]
         public void TestAbbreviateDots()
         {
-            var cellStyle = new CellStyle(textTrimming: CellTextTrimmingStyle.Dots);
+            var cellStyle = new CellStyle(textTrimming: CellTextTrimming.Dots);
             var cell = new Cell("abcdef", cellStyle);
             Assert.AreEqual("", cell.Render(0));
             Assert.AreEqual(".", cell.Render(1));

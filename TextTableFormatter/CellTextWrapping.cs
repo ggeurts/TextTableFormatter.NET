@@ -3,7 +3,7 @@ namespace TextTableFormatter
     /// <summary>
     /// Represents a cell content wrapping style.
     /// </summary>
-    public enum CellTextWrappingStyle
+    public enum CellTextWrapping
     {
         /// <summary>
         /// Do not wrap cell content
