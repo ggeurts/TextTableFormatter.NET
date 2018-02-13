@@ -9,18 +9,13 @@ namespace TextTableFormatter.UnitTests
         [TestCategory("RowTests")]
         public void TestSeparators()
         {
-            var cellStyle = new CellStyle
-            {
-                HorizontalAlignment = CellHorizontalAlignment.Left,
-                TextTrimmingStyle = CellTextTrimmingStyle.Crop,
-                NullStyle = CellNullStyle.EmptyString
-            };
+            var cellStyle = new CellStyle();
             var row = new Row();
-            row.Cells.Add(new Cell("abc", cellStyle, 1));
-            row.Cells.Add(new Cell("def", cellStyle, 1));
+            row.Cells.Add(new Cell("abc", cellStyle));
+            row.Cells.Add(new Cell("def", cellStyle));
             row.Cells.Add(new Cell("ghi", cellStyle, 2));
-            row.Cells.Add(new Cell("jkl", cellStyle, 1));
-            row.Cells.Add(new Cell("mno", cellStyle, 1));
+            row.Cells.Add(new Cell("jkl", cellStyle));
+            row.Cells.Add(new Cell("mno", cellStyle));
 
             Assert.AreEqual(5, row.Cells.Count);
             Assert.AreEqual(true, row.HasCellSeparatorInPosition(0));

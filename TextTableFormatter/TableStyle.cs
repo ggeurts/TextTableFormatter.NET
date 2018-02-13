@@ -1,140 +1,176 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace TextTableFormatter
 {
-    internal class TableStyle
+    using System.Collections.Generic;
+    using System.Text;
+
+    public class TableStyle
     {
-        private readonly TableVisibleBorders _shownBorders;
-        private readonly bool _escapeXml;
         private readonly string _prompt;
 
         /// <summary>
         /// Gets the table border style
         /// </summary>
-        internal TableBordersStyle BorderStyle { get; private set; }
+        public TableBorderStyle BorderStyle { get; }
 
-        internal TableStyle(TableBordersStyle borderStyle, TableVisibleBorders shownBorders, bool escapeXml,
-            int leftMargin, string prompt)
+        public TableBorderVisibility BorderVisibility { get; }
+
+        internal TableStyle(TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0)
         {
-            BorderStyle = borderStyle;
-            _shownBorders = shownBorders;
-            _escapeXml = escapeXml;
-            _prompt = prompt ?? (leftMargin > 0 ? Filler.GetFiller(leftMargin) : string.Empty);
+            this.BorderStyle = borderStyle ?? TableBorderStyle.CLASSIC;
+            this.BorderVisibility = borderVisibility ?? TableBorderVisibility.SURROUND_HEADER_AND_COLUMNS;
+            _prompt = leftMargin > 0 ? new string(' ', leftMargin) : string.Empty;
         }
 
-        internal string[] RenderAsStringArray(TextTable table)
+        internal IEnumerable<string> RenderLines(TextTable table)
         {
-            var totalRows = table.Rows.Count;
+            var rowCount = table.Rows.Count;
             Row previousRow = null;
-            var allLines = new List<string>();
-            for (var i = 0; i < totalRows; i++)
+            for (var i = 0; i < rowCount; i++)
             {
                 var row = table.Rows[i];
                 var isFirst = i == 0;
                 var isSecond = i == 1;
-                var isIntermediate = (i > 1 && i < totalRows - 1);
-                var isLast = i == (totalRows - 1);
-                var rr = RenderRow(row, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast);
-                foreach (string line in rr) allLines.Add(line);
+                var isIntermediate = (i > 1 && i < rowCount - 1);
+                var isLast = i == (rowCount - 1);
+                foreach (var line in RenderRow(row, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast))
+                {
+                    yield return line;
+                }
                 previousRow = row;
             }
-
-            var result = new string[allLines.Count];
-            var k = 0;
-            foreach (string line in allLines)
-            {
-                result[k] = line;
-                k++;
-            }
-            return result;
         }
 
-        internal string RenderTable(TextTable table)
+        internal string Render(TextTable table)
         {
             var sb = new StringBuilder();
-            var totalRows = table.Rows.Count;
+            var rowCount = table.Rows.Count;
             Row previousRow = null;
             var firstRenderedRow = true;
-            for (int i = 0; i < totalRows; i++)
+            for (var i = 0; i < rowCount; i++)
             {
                 var r = table.Rows[i];
                 var isFirst = i == 0;
                 var isSecond = i == 1;
-                var isIntermediate = (i > 1 && i < totalRows - 1);
-                var isLast = i == (totalRows - 1);
-                var rr = RenderRow(r, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast);
-                foreach (string line in rr)
+                var isIntermediate = (i > 1 && i < rowCount - 1);
+                var isLast = i == (rowCount - 1);
+
+                if (firstRenderedRow)
                 {
-                    if (firstRenderedRow) firstRenderedRow = false;
-                    else sb.Append("\n");
-                    sb.Append(line);
+                    firstRenderedRow = false;
                 }
+                else
+                {
+                    sb.Append('\n');
+                }
+                RenderRow(sb, r, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast);
+
                 previousRow = r;
             }
             return sb.ToString();
         }
 
-        private string EscapeXmlIfRequired(string txt1, string txt2)
+        private IEnumerable<string> RenderRow(Row row, Row previousRow, IList<Column> columns, bool isFirst, bool isSecond, bool isIntermediate, bool isLast)
         {
-            if (!_escapeXml) return txt1 + txt2;
-            var sb = new StringBuilder();
-            sb.Append(TextEncoder.EscapeXml(txt1));
-            sb.Append(TextEncoder.EscapeXml(txt2));
-            return sb.ToString();
-        }
+            var sb = new StringBuilder(_prompt, 80);
 
-        private IEnumerable<string> RenderRow(Row row, Row previousRow, IList<Column> columns, bool isFirst,
-            bool isSecond, bool isIntermediate, bool isLast)
-        {
-            var list = new List<string>();
             if (isFirst)
             {
-                if (_shownBorders.IsTopBorderVisible)
-                    list.Add(EscapeXmlIfRequired(_prompt, _shownBorders.RenderTopBorder(columns, BorderStyle, row)));
+                if (this.BorderVisibility.IsTopBorderVisible)
+                {
+                    sb.Length = _prompt.Length;
+                    this.BorderVisibility.RenderTopBorder(sb, columns, BorderStyle, row);
+                    yield return sb.ToString();
+                }
             }
             else
             {
-                if (isIntermediate && _shownBorders.IsMiddleSeparatorVisible || //
-                    isSecond && _shownBorders.IsHeaderSeparatorVisible //
-                    || isLast && _shownBorders.IsFooterSeparatorVisible)
+                if (isIntermediate && this.BorderVisibility.IsMiddleSeparatorVisible 
+                    || isSecond && this.BorderVisibility.IsHeaderSeparatorVisible 
+                    || isLast && this.BorderVisibility.IsFooterSeparatorVisible)
                 {
-                    list.Add(EscapeXmlIfRequired(_prompt,
-                        _shownBorders.RenderMiddleSeparator(columns, BorderStyle, previousRow, row)));
+                    sb.Length = _prompt.Length;
+                    this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, previousRow, row);
+                    yield return sb.ToString();
                 }
             }
 
-            list.Add(EscapeXmlIfRequired(_prompt, RenderContentRow(row, columns)));
+            for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
+            {
+                sb.Length = _prompt.Length;
+                RenderRowContent(sb, columns, row, lineIndex);
+                yield return sb.ToString();
+            }
 
             if (isLast)
             {
-                if (_shownBorders.IsBottomBorderVisible)
-                    list.Add(EscapeXmlIfRequired(_prompt, _shownBorders.RenderBottomBorder(columns, BorderStyle, row)));
+                if (this.BorderVisibility.IsBottomBorderVisible)
+                {
+                    sb.Length = _prompt.Length;
+                    this.BorderVisibility.RenderBottomBorder(sb, columns, BorderStyle, row);
+                    yield return sb.ToString();
+                }
             }
-
-            return list;
         }
 
-        private string RenderContentRow(Row row, IList<Column> columns)
+        private void RenderRow(StringBuilder sb, Row row, Row previousRow, IList<Column> columns, bool isFirst, bool isSecond, bool isIntermediate, bool isLast)
         {
-            var sb = new StringBuilder();
+            var linesWritten = 0;
+            if (isFirst)
+            {
+                if (this.BorderVisibility.IsTopBorderVisible)
+                {
+                    sb.Append(_prompt);
+                    this.BorderVisibility.RenderTopBorder(sb, columns, BorderStyle, row);
+                    linesWritten++;
+                }
+            }
+            else
+            {
+                if (isIntermediate && this.BorderVisibility.IsMiddleSeparatorVisible
+                    || isSecond && this.BorderVisibility.IsHeaderSeparatorVisible
+                    || isLast && this.BorderVisibility.IsFooterSeparatorVisible)
+                {
+                    sb.Append(_prompt);
+                    this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, previousRow, row);
+                    linesWritten++;
+                }
+            }
 
+            for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
+            {
+                if (linesWritten > 0) sb.Append('\n');
+                sb.Append(_prompt);
+                RenderRowContent(sb, columns, row, lineIndex);
+                linesWritten++;
+            }
+
+            if (isLast)
+            {
+                if (this.BorderVisibility.IsBottomBorderVisible)
+                {
+                    if (linesWritten > 0) sb.Append('\n');
+                    sb.Append(_prompt);
+                    this.BorderVisibility.RenderBottomBorder(sb, columns, BorderStyle, row);
+                }
+            }
+        }
+
+        private void RenderRowContent(StringBuilder sb, IList<Column> columns, Row row, int lineIndex)
+        {
             // Left border
-            if (_shownBorders.IsLeftBorderVisible) sb.Append(BorderStyle.Left);
+            if (this.BorderVisibility.IsLeftBorderVisible) sb.Append(BorderStyle.Left);
 
             // Cells
-            var totalColumns = columns.Count;
+            var columnCount = columns.Count;
             var j = 0;
-            foreach (Cell cell in row.Cells)
+            foreach (var cell in row.Cells)
             {
                 // cell separator
                 if (j != 0)
                 {
-                    if ((j > 1 && j < totalColumns - 1)
-                        && _shownBorders.IsCenterSeparatorVisible
-                        || ((j == 1) && (_shownBorders.IsLeftSeparatorVisible))
-                        || ((j == (totalColumns - 1)) && (_shownBorders.IsRightSeparatorVisible)))
+                    if ((j > 1 && j < columnCount - 1 && this.BorderVisibility.IsCenterSeparatorVisible)
+                        || (j == 1 && this.BorderVisibility.IsLeftSeparatorVisible)
+                        || (j == columnCount - 1 && this.BorderVisibility.IsRightSeparatorVisible))
                     {
                         sb.Append(BorderStyle.Center);
                     }
@@ -144,39 +180,34 @@ namespace TextTableFormatter
                 var sepWidth = BorderStyle.Center.Length;
                 var width = -sepWidth;
                 for (var pos = j; pos < j + cell.ColumnSpan; pos++)
-                    width = width + sepWidth + columns[pos].Width;
+                {
+                    width = width + sepWidth + columns[pos].ActualWidth;
+                }
 
-                var renderedCell = cell.Render(width);
-                sb.Append(renderedCell);
+                cell.Render(sb, width, lineIndex);
                 j = j + cell.ColumnSpan;
             }
 
             // Render missing cells
-            for (; j < totalColumns; j++)
+            for (; j < columnCount; j++)
             {
                 // cell separator
                 if (j != 0)
                 {
-                    if ((j > 1 && j < totalColumns - 1)
-                        && _shownBorders.IsCenterSeparatorVisible
-                        || ((j == 1) && (_shownBorders.IsLeftSeparatorVisible))
-                        || ((j == (totalColumns - 1)) && (_shownBorders.IsRightSeparatorVisible)))
+                    if ((j > 1 && j < columnCount - 1 && this.BorderVisibility.IsCenterSeparatorVisible)
+                        || (j == 1 && this.BorderVisibility.IsLeftSeparatorVisible)
+                        || (j == columnCount - 1 && this.BorderVisibility.IsRightSeparatorVisible))
                     {
                         sb.Append(BorderStyle.Center);
                     }
                 }
 
                 // Cell content
-                var col = columns[j];
-                var renderedCell = CellStyle.RenderNullCell(col.Width);
-                sb.Append(renderedCell);
+                sb.Append(' ', columns[j].ActualWidth);
             }
 
             // Right border
-            if (_shownBorders.IsRightBorderVisible)
-                sb.Append(BorderStyle.Right);
-
-            return sb.ToString();
+            if (this.BorderVisibility.IsRightBorderVisible) sb.Append(BorderStyle.Right);
         }
     }
 }

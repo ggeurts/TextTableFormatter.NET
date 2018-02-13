@@ -39,17 +39,14 @@
     <Compile Include="TableBorderStyle.cs" />
     <Compile Include="Cell.cs" />
     <Compile Include="CellTextTrimmingStyle.cs" />
-    <Compile Include="CellHorizontalAlignment.cs" />
-    <Compile Include="CellNullStyle.cs" />
+    <Compile Include="CellTextAlignment.cs" />
     <Compile Include="CellStyle.cs" />
     <Compile Include="Column.cs" />
-    <Compile Include="Filler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Row.cs" />
-    <Compile Include="TableVisibleBorders.cs" />
+    <Compile Include="TableBorderVisibility.cs" />
     <Compile Include="TextTable.cs" />
     <Compile Include="TableStyle.cs" />
-    <Compile Include="TextEncoder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

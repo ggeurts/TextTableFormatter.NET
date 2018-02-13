@@ -6,9 +6,25 @@ namespace TextTableFormatter
     {
         internal IList<Cell> Cells { get; }
 
-        internal Row()
+        public Row()
         {
             Cells = new List<Cell>();
+        }
+
+        /// <summary>
+        /// Gets the maximum number of content lines in cells that belong to this row.
+        /// </summary>
+        public int LineCount
+        {
+            get
+            {
+                var result = 0;
+                foreach (var cell in this.Cells)
+                {
+                    if (cell.LineCount > result) result = cell.LineCount;
+                }
+                return result;
+            }
         }
 
         internal bool HasCellSeparatorInPosition(int position)
@@ -17,13 +33,9 @@ namespace TextTableFormatter
             var i = 0;
             foreach (var cell in Cells)
             {
-                if (i < position)
-                {
-                    if (i + cell.ColumnSpan > position) return false;
-                }
-                else return true;
-
-                i = i + cell.ColumnSpan;
+                if (i >= position) return true;
+                if (i + cell.ColumnSpan > position) return false;
+                i += cell.ColumnSpan;
             }
             return true;
         }

@@ -1,9 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Text;
-
-namespace TextTableFormatter.ConsoleApp
+﻿namespace TextTableFormatter.ConsoleApp
 {
+    using System;
+    using System.IO;
+    using System.Text;
+    using System.Web;
+
     class Program
     {
         static void Main()
@@ -21,18 +22,18 @@ namespace TextTableFormatter.ConsoleApp
             basicTable.AddCell("1994");
             Console.WriteLine(basicTable.Render());
 
-            // +----------+-------------------------------+-----+
+            // +----------+------------------------------+----+
             // |Artist    |Album                         |Year|
-            // +----------+-------------------------------+-----+
+            // +----------+------------------------------+----+
             // |Jamiroquai|Emergency on Planet Earth     |1993|
             // |Jamiroquai|The Return of the Space Cowboy|1994|
-            // +----------+-------------------------------+-----+
+            // +----------+------------------------------+----+
 
 
             // 2. ADVANCED TABLE EXAMPLE
-            var numberStyleAdvancedTable = new CellStyle { HorizontalAlignment = CellHorizontalAlignment.Right };
-            var advancedTable = new TextTable(3, TableBordersStyle.DESIGN_FORMAL,
-                TableVisibleBorders.SURROUND_HEADER_FOOTER_AND_COLUMNS);
+            var numberStyleAdvancedTable = new CellStyle(CellTextAlignment.Right);
+            var advancedTable = new TextTable(3, TableBorderStyle.DESIGN_FORMAL,
+                TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS);
             advancedTable.SetColumnWidthRange(0, 6, 14);
             advancedTable.SetColumnWidthRange(1, 4, 12);
             advancedTable.SetColumnWidthRange(2, 4, 12);
@@ -70,9 +71,9 @@ namespace TextTableFormatter.ConsoleApp
 
 
             // 3. FANCY TABLE EXAMPLE
-            var numberStyleFancyTable = new CellStyle { HorizontalAlignment = CellHorizontalAlignment.Right };
-            var fancyTable = new TextTable(3, TableBordersStyle.DESIGN_PAPYRUS,
-                TableVisibleBorders.SURROUND_HEADER_FOOTER_AND_COLUMNS);
+            var numberStyleFancyTable = new CellStyle(CellTextAlignment.Right);
+            var fancyTable = new TextTable(3, TableBorderStyle.DESIGN_PAPYRUS,
+                TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS);
 
             fancyTable.AddCell("Region");
             fancyTable.AddCell("Orders", numberStyleFancyTable);
@@ -107,9 +108,9 @@ namespace TextTableFormatter.ConsoleApp
 
 
             // 4. UNICODE TABLE EXAMPLE
-            var numberStyleUnicodeTable = new CellStyle { HorizontalAlignment = CellHorizontalAlignment.Right };
-            var unicodeTable = new TextTable(3, TableBordersStyle.UNICODE_BOX_DOUBLE_BORDER_WIDE,
-                TableVisibleBorders.SURROUND_HEADER_FOOTER_AND_COLUMNS, true);
+            var numberStyleUnicodeTable = new CellStyle(CellTextAlignment.Right);
+            var unicodeTable = new TextTable(3, TableBorderStyle.UNICODE_BOX_DOUBLE_BORDER_WIDE,
+                TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS);
 
             unicodeTable.AddCell("Region");
             unicodeTable.AddCell("Orders", numberStyleUnicodeTable);
@@ -130,11 +131,10 @@ namespace TextTableFormatter.ConsoleApp
             unicodeTable.AddCell("Total", numberStyleUnicodeTable, 2);
             unicodeTable.AddCell("$172.646", numberStyleUnicodeTable);
 
-            var unicodeTableStringArray = unicodeTable.RenderAsStringArray();
             var sb = new StringBuilder("<html><body><pre>");
-            foreach (string line in unicodeTableStringArray)
+            foreach (string line in unicodeTable.RenderLines())
             {
-                sb.Append(line);
+                sb.Append(HttpUtility.HtmlEncode(line));
                 sb.Append("<br>");
             }
             sb.Append("</pre></html>");

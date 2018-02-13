@@ -5,19 +5,17 @@ namespace TextTableFormatter
     internal class Column
     {
         private readonly int _columnIndex;
-        private readonly IList<Cell> _cells;
+        private readonly IList<Cell> _cells = new List<Cell>();
         private int _minWidth;
         private int _maxWidth;
 
-        internal int Width { get; private set; }
+        internal int ActualWidth { get; private set; } = -1;
 
         internal Column(int columnIndex, int minWidth, int maxWidth)
         {
             _columnIndex = columnIndex;
             _minWidth = minWidth;
             _maxWidth = maxWidth;
-            _cells = new List<Cell>();
-            Width = 0;
         }
 
         internal Column(int columnIndex, int width)
@@ -25,24 +23,25 @@ namespace TextTableFormatter
             _columnIndex = columnIndex;
             _minWidth = width;
             _maxWidth = width;
-            _cells = new List<Cell>();
-            Width = width;
         }
 
-        internal void CalculateWidth(IList<Column> columns, int separatorWidth)
+        internal void PerformLayout(IList<Column> columns, int separatorWidth)
         {
-            Width = _minWidth;
+            this.ActualWidth = _minWidth;
             foreach (var cell in _cells)
             {
                 var previousWidth = 0;
                 if (cell.ColumnSpan > 1)
                 {
                     for (var pos = _columnIndex - cell.ColumnSpan + 1; pos < _columnIndex; pos++)
-                        previousWidth = previousWidth + columns[pos].Width + separatorWidth;
+                    {
+                        previousWidth += columns[pos].ActualWidth + separatorWidth;
+                    }
                 }
-                var cellTightWidth = cell.GetTightWidth(_maxWidth);
-                var tw = cellTightWidth - previousWidth;
-                if (tw > Width) Width = tw;
+
+                cell.PerformLayout(_maxWidth);
+                var desiredColumWidth = cell.ActualWidth - previousWidth;
+                if (desiredColumWidth > this.ActualWidth) this.ActualWidth = desiredColumWidth;
             }
         }
 

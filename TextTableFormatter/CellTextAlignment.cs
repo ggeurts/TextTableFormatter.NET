@@ -3,7 +3,7 @@ namespace TextTableFormatter
     /// <summary>
     /// Represents the cell horizontal alignment
     /// </summary>
-    public enum CellHorizontalAlignment
+    public enum CellTextAlignment
     {
         /// <summary>
         /// Left horizontal alignment

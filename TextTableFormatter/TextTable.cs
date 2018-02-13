@@ -21,79 +21,14 @@ namespace TextTableFormatter
         /// <summary>
         /// Initializes a new instance of TextTable class
         /// </summary>
-        /// <param name="columnsCount">The columns count</param>
-        public TextTable(int columnsCount)
-        {
-            Initialize(columnsCount);
-            _tableStyle = new TableStyle(TableBordersStyle.CLASSIC, TableVisibleBorders.SURROUND_HEADER_AND_COLUMNS,
-                false, 0, null);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of TextTable class
-        /// </summary>
-        /// <param name="columnsCount">The columns count</param>
+        /// <param name="columnCount">The columns count</param>
         /// <param name="borderStyle">The table border style</param>
-        public TextTable(int columnsCount, TableBordersStyle borderStyle)
-        {
-            Initialize(columnsCount);
-            _tableStyle = new TableStyle(borderStyle, TableVisibleBorders.SURROUND_HEADER_AND_COLUMNS, false, 0, null);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of TextTable class
-        /// </summary>
-        /// <param name="columnsCount">The columns count</param>
-        /// <param name="borderStyle">The table border style</param>
-        /// <param name="visibleBorders">The table visible borders</param>
-        public TextTable(int columnsCount, TableBordersStyle borderStyle, TableVisibleBorders visibleBorders)
-        {
-            Initialize(columnsCount);
-            _tableStyle = new TableStyle(borderStyle, visibleBorders, false, 0, null);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of TextTable class
-        /// </summary>
-        /// <param name="columnsCount">The columns count</param>
-        /// <param name="borderStyle">The table border style</param>
-        /// <param name="visibleBorders">The table visible borders</param>
-        /// <param name="escapeXml">true if xml content must be escaped</param>
-        public TextTable(int columnsCount, TableBordersStyle borderStyle, TableVisibleBorders visibleBorders,
-            bool escapeXml)
-        {
-            Initialize(columnsCount);
-            _tableStyle = new TableStyle(borderStyle, visibleBorders, escapeXml, 0, null);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of TextTable class
-        /// </summary>
-        /// <param name="columnsCount">The columns count</param>
-        /// <param name="borderStyle">The table border style</param>
-        /// <param name="visibleBorders">The table visible borders</param>
-        /// <param name="escapeXml">true if xml content must be escaped</param>
+        /// <param name="borderVisibility">The table visible borders</param>
         /// <param name="leftMargin">The table left margin</param>
-        public TextTable(int columnsCount, TableBordersStyle borderStyle, TableVisibleBorders visibleBorders,
-            bool escapeXml, int leftMargin)
+        public TextTable(int columnCount, TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0)
         {
-            Initialize(columnsCount);
-            _tableStyle = new TableStyle(borderStyle, visibleBorders, escapeXml, leftMargin, null);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of TextTable class
-        /// </summary>
-        /// <param name="columnsCount">The columns count</param>
-        /// <param name="borderStyle">The table border style</param>
-        /// <param name="visibleBorders">The table visible borders</param>
-        /// <param name="escapeXml">true if xml content must be escaped</param>
-        /// <param name="prompt">The table prompt string</param>
-        public TextTable(int columnsCount, TableBordersStyle borderStyle, TableVisibleBorders visibleBorders,
-            bool escapeXml, string prompt)
-        {
-            Initialize(columnsCount);
-            _tableStyle = new TableStyle(borderStyle, visibleBorders, escapeXml, 0, prompt);
+            Initialize(columnCount);
+            _tableStyle = new TableStyle(borderStyle, borderVisibility, leftMargin);
         }
 
         /// <summary>
@@ -169,18 +104,18 @@ namespace TextTableFormatter
         /// <returns></returns>
         public string Render()
         {
-            CalculateColumnsWidth();
-            return _tableStyle.RenderTable(this);
+            PerformLayout();
+            return _tableStyle.Render(this);
         }
 
         /// <summary>
         /// Renders the table as a string array (each array element is a row)
         /// </summary>
         /// <returns></returns>
-        public string[] RenderAsStringArray()
+        public IEnumerable<string> RenderLines()
         {
-            CalculateColumnsWidth();
-            return _tableStyle.RenderAsStringArray(this);
+            PerformLayout();
+            return _tableStyle.RenderLines(this);
         }
 
         private void Initialize(int totalColumns)
@@ -197,7 +132,7 @@ namespace TextTableFormatter
             _currentRow = null;
         }
 
-        private void CalculateColumnsWidth()
+        private void PerformLayout()
         {
             // First we connect the columns with the cells.
             foreach (var row in Rows)
@@ -221,7 +156,9 @@ namespace TextTableFormatter
 
             // Then we calculate the appropriate column width for each one.
             foreach (var col in Columns)
-                col.CalculateWidth(Columns, _tableStyle.BorderStyle.TopCenterCorner.Length);
+            {
+                col.PerformLayout(Columns, _tableStyle.BorderStyle.TopCenterCorner.Length);
+            }
         }
     }
 }
