@@ -9,7 +9,7 @@
         [TestCategory("TableTests")]
         public void TestEmpty()
         {
-            var table = new TextTable(10, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(10);
             Assert.AreEqual("", table.Render());
         }
 
@@ -18,7 +18,7 @@
         public void TestOneCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(1, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumn();
             table.AddCell("abcdef", cellStyle);
 
             Assert.AreEqual(""
@@ -32,7 +32,7 @@
         public void TestNullCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(1, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumn();
             table.AddCell(null, cellStyle);
             Assert.AreEqual(""
                             + "++\n"
@@ -45,7 +45,7 @@
         public void TestEmptyCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(1, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumn();
             table.AddCell("", cellStyle);
             Assert.AreEqual(""
                             + "++\n"
@@ -58,7 +58,7 @@
         public void TestTwoCellsHorizontal()
         {
             var cellStyle = new CellStyle();
-            var textTable = new TextTable(2, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var textTable = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(2);
             textTable.AddCell("abcdef", cellStyle);
             textTable.AddCell("123456", cellStyle);
 
@@ -73,7 +73,7 @@
         public void TestTwoCellsVertical()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(1, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumn();
             table.AddCell("abcdef", cellStyle);
             table.AddCell("123456", cellStyle);
 
@@ -90,7 +90,7 @@
         public void TestMarginSpaces()
         {
             var cellStyle = new CellStyle();
-            var textTable = new TextTable(1, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL, 4);
+            var textTable = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL, 4).AddColumn();
             textTable.AddCell("abcdef", cellStyle);
             textTable.AddCell("123456", cellStyle);
 
@@ -107,7 +107,7 @@
         public void TestAutomaticWidth()
         {
             var cellStyle = new CellStyle();
-            var textTable = new TextTable(2, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var textTable = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(2);
             textTable.AddCell("abcdef", cellStyle);
             textTable.AddCell("123456", cellStyle);
             textTable.AddCell("mno", cellStyle);
@@ -130,9 +130,9 @@
         public void TestSetWidth()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(2, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
-            table.Columns[0].SetWidthRange(6, 10);
-            table.Columns[1].SetWidthRange(2, 7);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
+                .AddColumn(6, 10)
+                .AddColumn(2, 7);
 
             table.AddCell("abcd", cellStyle);
             table.AddCell("123456", cellStyle);
@@ -156,9 +156,9 @@
         public void TestMissingCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(2, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
-            table.Columns[0].SetWidthRange(6, 10);
-            table.Columns[1].SetWidthRange(2, 7);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
+                .AddColumn(6, 10)
+                .AddColumn(2, 7);
 
             table.AddCell("abcd", cellStyle);
             table.AddCell("123456", cellStyle);
@@ -183,10 +183,10 @@
             var csl = new CellStyle();
             var csc = new CellStyle(CellTextAlignment.Center);
             var csr = new CellStyle(CellTextAlignment.Right);
-            var table = new TextTable(3, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
-            table.Columns[0].SetWidthRange(6, 6);
-            table.Columns[1].SetWidthRange(6, 6);
-            table.Columns[2].SetWidthRange(6, 6);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
+                .AddColumn(6, 6)
+                .AddColumn(6, 6)
+                .AddColumn(6, 6);
 
             table.AddCell("Cell\nOne", csl);
             table.AddCell("Cell\rTwo", csc);
@@ -206,10 +206,10 @@
             var csl = new CellStyle(textWrapping: CellTextWrappingStyle.Wrap);
             var csc = new CellStyle(CellTextAlignment.Center, textWrapping: CellTextWrappingStyle.Wrap);
             var csr = new CellStyle(CellTextAlignment.Right, textWrapping: CellTextWrappingStyle.Wrap);
-            var table = new TextTable(3, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
-            table.Columns[0].SetWidthRange(6, 6);
-            table.Columns[1].SetWidthRange(6, 6);
-            table.Columns[2].SetWidthRange(6, 6);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
+                .AddColumn(6, 6)
+                .AddColumn(6, 6)
+                .AddColumn(6, 6);
 
             table.AddCell("Cell One", csl);
             table.AddCell("Cell.Two", csc);

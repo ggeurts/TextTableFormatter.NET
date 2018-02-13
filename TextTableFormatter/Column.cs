@@ -1,15 +1,15 @@
-using System.Collections.Generic;
-
 namespace TextTableFormatter
 {
+    using System.Collections.Generic;
+
     internal class Column
     {
         private readonly int _columnIndex;
         private readonly IList<Cell> _cells = new List<Cell>();
-        private int _minWidth;
-        private int _maxWidth;
+        private readonly int _minWidth;
+        private readonly int _maxWidth;
 
-        internal int ActualWidth { get; private set; } = -1;
+        public int ActualWidth { get; private set; }
 
         internal Column(int columnIndex, int minWidth, int maxWidth)
         {
@@ -18,42 +18,36 @@ namespace TextTableFormatter
             _maxWidth = maxWidth;
         }
 
-        internal Column(int columnIndex, int width)
-        {
-            _columnIndex = columnIndex;
-            _minWidth = width;
-            _maxWidth = width;
-        }
-
         internal void PerformLayout(IList<Column> columns, int separatorWidth)
         {
-            this.ActualWidth = _minWidth;
+            var desiredWidth = _minWidth;
             foreach (var cell in _cells)
             {
-                var previousWidth = 0;
+                var cellOverlapWithPreviousColumns = 0;
+
                 if (cell.ColumnSpan > 1)
                 {
                     for (var pos = _columnIndex - cell.ColumnSpan + 1; pos < _columnIndex; pos++)
                     {
-                        previousWidth += columns[pos].ActualWidth + separatorWidth;
+                        cellOverlapWithPreviousColumns += columns[pos].ActualWidth + separatorWidth;
                     }
                 }
 
                 cell.PerformLayout(_maxWidth);
-                var desiredColumWidth = cell.ActualWidth - previousWidth;
-                if (desiredColumWidth > this.ActualWidth) this.ActualWidth = desiredColumWidth;
+
+                var cellOverlap = cell.ActualWidth - cellOverlapWithPreviousColumns;
+                if (cellOverlap > desiredWidth)
+                {
+                    desiredWidth = cellOverlap;
+                }
             }
+
+            this.ActualWidth = desiredWidth;
         }
 
         internal void AddCell(Cell cell)
         {
             _cells.Add(cell);
-        }
-
-        internal void SetWidthRange(int minWidth, int maxWidth)
-        {
-            _minWidth = minWidth;
-            _maxWidth = maxWidth;
         }
     }
 }

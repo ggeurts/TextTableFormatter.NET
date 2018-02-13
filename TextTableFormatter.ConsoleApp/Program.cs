@@ -10,7 +10,7 @@
         static void Main()
         {
             // 1. BASIC TABLE EXAMPLE
-            var basicTable = new TextTable(3);
+            var basicTable = new TextTable().AddColumns(3);
             basicTable.AddCell("Artist");
             basicTable.AddCell("Album");
             basicTable.AddCell("Year");
@@ -32,11 +32,10 @@
 
             // 2. ADVANCED TABLE EXAMPLE
             var numberStyleAdvancedTable = new CellStyle(CellTextAlignment.Right);
-            var advancedTable = new TextTable(3, TableBorderStyle.DESIGN_FORMAL,
-                TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS);
-            advancedTable.SetColumnWidthRange(0, 6, 14);
-            advancedTable.SetColumnWidthRange(1, 4, 12);
-            advancedTable.SetColumnWidthRange(2, 4, 12);
+            var advancedTable = new TextTable(TableBorderStyle.DESIGN_FORMAL, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+                .AddColumn(6, 14)
+                .AddColumn(4, 12)
+                .AddColumn(4, 12);
 
             advancedTable.AddCell("Region");
             advancedTable.AddCell("Orders", numberStyleAdvancedTable);
@@ -72,8 +71,8 @@
 
             // 3. FANCY TABLE EXAMPLE
             var numberStyleFancyTable = new CellStyle(CellTextAlignment.Right);
-            var fancyTable = new TextTable(3, TableBorderStyle.DESIGN_PAPYRUS,
-                TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS);
+            var fancyTable = new TextTable(TableBorderStyle.DESIGN_PAPYRUS, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+                .AddColumns(3);
 
             fancyTable.AddCell("Region");
             fancyTable.AddCell("Orders", numberStyleFancyTable);
@@ -109,8 +108,8 @@
 
             // 4. UNICODE TABLE EXAMPLE
             var numberStyleUnicodeTable = new CellStyle(CellTextAlignment.Right);
-            var unicodeTable = new TextTable(3, TableBorderStyle.UNICODE_BOX_DOUBLE_BORDER_WIDE,
-                TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS);
+            var unicodeTable = new TextTable(TableBorderStyle.UNICODE_BOX_DOUBLE_BORDER_WIDE, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+                .AddColumns(3);
 
             unicodeTable.AddCell("Region");
             unicodeTable.AddCell("Orders", numberStyleUnicodeTable);

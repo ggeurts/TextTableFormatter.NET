@@ -1,8 +1,7 @@
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace TextTableFormatter.UnitTests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class TableColSpanUnitTests
     {
@@ -11,7 +10,7 @@ namespace TextTableFormatter.UnitTests
         public void TestWideNullCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(5, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(5);
             table.AddCell(null, cellStyle, 5);
 
             Assert.AreEqual(""
@@ -25,7 +24,7 @@ namespace TextTableFormatter.UnitTests
         public void TestWideIncompleteNullCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(7, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(7);
             table.AddCell(null, cellStyle, 3);
 
             Assert.AreEqual(""
@@ -41,9 +40,9 @@ namespace TextTableFormatter.UnitTests
             var cs = new CellStyle();
             var csr = new CellStyle(CellTextAlignment.Right);
             var csc = new CellStyle(CellTextAlignment.Center);
-            var table = new TextTable(2, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
-            table.Columns.ElementAt(0).SetWidthRange(6, 10);
-            table.Columns.ElementAt(1).SetWidthRange(2, 7);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
+                .AddColumn(6, 10)
+                .AddColumn(2, 7);
 
             table.AddCell("abcd", cs);
             table.AddCell("123456", cs);
@@ -69,10 +68,11 @@ namespace TextTableFormatter.UnitTests
         {
             var cellStyle1 = new CellStyle();
 
-            var table = new TextTable(4, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
-            table.Columns[0].SetWidthRange(3, 10);
-            table.Columns[1].SetWidthRange(2, 7);
-            table.Columns[2].SetWidthRange(3, 10);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
+                .AddColumn(3, 10)
+                .AddColumn(2, 7)
+                .AddColumn(3, 10)
+                .AddColumn();
 
             table.AddCell("abcd", cellStyle1);
             table.AddCell("123456", cellStyle1);
@@ -104,9 +104,9 @@ namespace TextTableFormatter.UnitTests
         {
             var cellStyle1 = new CellStyle();
             var cellStyle2 = new CellStyle(CellTextAlignment.Right);
-            var textTable = new TextTable(2, TableBorderStyle.CLASSIC_WIDE, TableBorderVisibility.ALL);
-            textTable.Columns[0].SetWidthRange(6, 10);
-            textTable.Columns[1].SetWidthRange(2, 7);
+            var textTable = new TextTable(TableBorderStyle.CLASSIC_WIDE, TableBorderVisibility.ALL)
+                .AddColumn(6, 10)
+                .AddColumn(2, 7);
 
             textTable.AddCell("abcd", cellStyle1);
             textTable.AddCell("123456", cellStyle1);
@@ -128,7 +128,7 @@ namespace TextTableFormatter.UnitTests
         public void TestTooWideCell()
         {
             var cellStyle = new CellStyle();
-            var table = new TextTable(3, TableBorderStyle.CLASSIC, TableBorderVisibility.ALL);
+            var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumns(3);
             table.AddCell("abc", cellStyle, 5);
             table.AddCell("defg", cellStyle, 5);
             Assert.AreEqual(""

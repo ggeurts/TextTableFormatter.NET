@@ -11,6 +11,19 @@ namespace TextTableFormatter
             Cells = new List<Cell>();
         }
 
+        internal int ColumnSpan
+        {
+            get
+            {
+                var span = 0;
+                foreach (var cell in this.Cells)
+                {
+                    span += cell.ColumnSpan;
+                }
+                return span;
+            }
+        }
+
         /// <summary>
         /// Gets the maximum number of content lines in cells that belong to this row.
         /// </summary>

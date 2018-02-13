@@ -30,24 +30,6 @@ namespace TextTableFormatter
         public int ColumnSpan { get; private set; }
 
         /// <summary>
-        /// Gets the width required to display cell content without wrapping 
-        /// as calculated during layout phase.
-        /// </summary>
-        internal int DesiredWidth
-        {
-            get
-            {
-                var maxLength = 0;
-                for (var i = 0; i < _lines.Count; i++)
-                {
-                    if (_lines[i].Length > maxLength) maxLength = _lines[i].Length;
-                }
-
-                return maxLength;
-            }
-        }
-
-        /// <summary>
         /// Gets the actual cell width as calculated during layout phase.
         /// </summary>
         internal int ActualWidth { get; private set; }
@@ -85,12 +67,18 @@ namespace TextTableFormatter
             this.ColumnSpan = columnSpan;
         }
 
-        public void PerformLayout(int maxWidth)
+        internal void PerformLayout(int maxWidth)
         {
             _lines.Clear();
             AddLines(_lines, _content, maxWidth);
 
-            this.ActualWidth = Math.Min(this.DesiredWidth, maxWidth);
+            var desiredWidth = 0;
+            for (var i = 0; i < _lines.Count; i++)
+            {
+                if (_lines[i].Length > desiredWidth) desiredWidth = _lines[i].Length;
+            }
+
+            this.ActualWidth = Math.Min(desiredWidth, maxWidth);
         }
 
         public string Render(int width)
