@@ -1,5 +1,6 @@
 namespace TextTableFormatter.UnitTests
 {
+    using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -14,8 +15,8 @@ namespace TextTableFormatter.UnitTests
             table.AddCell(null, cellStyle, 5);
 
             Assert.AreEqual(""
-                            + "+----+\n"
-                            + "|    |\n"
+                            + "+----+" + Environment.NewLine
+                            + "|    |" + Environment.NewLine
                             + "+----+", table.Render());
         }
 
@@ -28,8 +29,8 @@ namespace TextTableFormatter.UnitTests
             table.AddCell(null, cellStyle, 3);
 
             Assert.AreEqual(""
-                            + "+--+++++\n"
-                            + "|  |||||\n"
+                            + "+--+++++" + Environment.NewLine
+                            + "|  |||||" + Environment.NewLine
                             + "+--+++++", table.Render());
         }
 
@@ -51,14 +52,14 @@ namespace TextTableFormatter.UnitTests
             table.AddCell("efgh", csc, 2);
 
             Assert.AreEqual(""
-                            + "+------+------+\n"
-                            + "|abcd  |123456|\n"
-                            + "+-------------+\n"
-                            + "|mno          |\n"
-                            + "+-------------+\n"
-                            + "|        xyztu|\n"
-                            + "+-------------+\n"
-                            + "|    efgh     |\n"
+                            + "+------+------+" + Environment.NewLine
+                            + "|abcd  |123456|" + Environment.NewLine
+                            + "+-------------+" + Environment.NewLine
+                            + "|mno          |" + Environment.NewLine
+                            + "+-------------+" + Environment.NewLine
+                            + "|        xyztu|" + Environment.NewLine
+                            + "+-------------+" + Environment.NewLine
+                            + "|    efgh     |" + Environment.NewLine
                             + "+-------------+", table.Render());
         }
 
@@ -89,12 +90,12 @@ namespace TextTableFormatter.UnitTests
             table.AddCell("567890", cellStyle1);
 
             Assert.AreEqual(""
-                            + "+----+------+----+------+\n"
-                            + "|abcd|123456|efgh|789012|\n"
-                            + "+----+-----------+------+\n"
-                            + "|ijkl|mno        |345678|\n"
-                            + "+----+-----------+------+\n"
-                            + "|mnop|901234|qrst|567890|\n"
+                            + "+----+------+----+------+" + Environment.NewLine
+                            + "|abcd|123456|efgh|789012|" + Environment.NewLine
+                            + "+----+-----------+------+" + Environment.NewLine
+                            + "|ijkl|mno        |345678|" + Environment.NewLine
+                            + "+----+-----------+------+" + Environment.NewLine
+                            + "|mnop|901234|qrst|567890|" + Environment.NewLine
                             + "+----+------+----+------+", table.Render());
         }
 
@@ -114,12 +115,12 @@ namespace TextTableFormatter.UnitTests
             textTable.AddCell("xyztu", cellStyle2, 2);
 
             Assert.AreEqual(""
-                            + "+--------+--------+\n"
-                            + "| abcd   | 123456 |\n"
-                            + "+-----------------+\n"
-                            + "| mno             |\n"
-                            + "+-----------------+\n"
-                            + "|           xyztu |\n"
+                            + "+--------+--------+" + Environment.NewLine
+                            + "| abcd   | 123456 |" + Environment.NewLine
+                            + "+-----------------+" + Environment.NewLine
+                            + "| mno             |" + Environment.NewLine
+                            + "+-----------------+" + Environment.NewLine
+                            + "|           xyztu |" + Environment.NewLine
                             + "+-----------------+", textTable.Render());
         }
 
@@ -132,10 +133,10 @@ namespace TextTableFormatter.UnitTests
             table.AddCell("abc", cellStyle, 5);
             table.AddCell("defg", cellStyle, 5);
             Assert.AreEqual(""
-                            + "+----+\n"
-                            + "|abc |\n"
-                            + "+----+\n"
-                            + "|defg|\n"
+                            + "+----+" + Environment.NewLine
+                            + "|abc |" + Environment.NewLine
+                            + "+----+" + Environment.NewLine
+                            + "|defg|" + Environment.NewLine
                             + "+----+", table.Render());
         }
     }

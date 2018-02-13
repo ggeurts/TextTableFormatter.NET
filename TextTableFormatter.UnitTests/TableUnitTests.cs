@@ -1,5 +1,6 @@
 ﻿namespace TextTableFormatter.UnitTests
 {
+    using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -22,8 +23,8 @@
             table.AddCell("abcdef", cellStyle);
 
             Assert.AreEqual(""
-                            + "+------+\n"
-                            + "|abcdef|\n"
+                            + "+------+" + Environment.NewLine
+                            + "|abcdef|" + Environment.NewLine
                             + "+------+", table.Render());
         }
 
@@ -35,8 +36,8 @@
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumn();
             table.AddCell(null, cellStyle);
             Assert.AreEqual(""
-                            + "++\n"
-                            + "||\n"
+                            + "++" + Environment.NewLine
+                            + "||" + Environment.NewLine
                             + "++", table.Render());
         }
 
@@ -48,8 +49,8 @@
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL).AddColumn();
             table.AddCell("", cellStyle);
             Assert.AreEqual(""
-                            + "++\n"
-                            + "||\n"
+                            + "++" + Environment.NewLine
+                            + "||" + Environment.NewLine
                             + "++", table.Render());
         }
 
@@ -63,8 +64,8 @@
             textTable.AddCell("123456", cellStyle);
 
             Assert.AreEqual(""
-                            + "+------+------+\n"
-                            + "|abcdef|123456|\n"
+                            + "+------+------+" + Environment.NewLine
+                            + "|abcdef|123456|" + Environment.NewLine
                             + "+------+------+", textTable.Render());
         }
 
@@ -78,10 +79,10 @@
             table.AddCell("123456", cellStyle);
 
             Assert.AreEqual(""
-                            + "+------+\n"
-                            + "|abcdef|\n"
-                            + "+------+\n"
-                            + "|123456|\n"
+                            + "+------+" + Environment.NewLine
+                            + "|abcdef|" + Environment.NewLine
+                            + "+------+" + Environment.NewLine
+                            + "|123456|" + Environment.NewLine
                             + "+------+", table.Render());
         }
 
@@ -95,10 +96,10 @@
             textTable.AddCell("123456", cellStyle);
 
             Assert.AreEqual(""
-                            + "    +------+\n"
-                            + "    |abcdef|\n"
-                            + "    +------+\n"
-                            + "    |123456|\n"
+                            + "    +------+" + Environment.NewLine
+                            + "    |abcdef|" + Environment.NewLine
+                            + "    +------+" + Environment.NewLine
+                            + "    |123456|" + Environment.NewLine
                             + "    +------+", textTable.Render());
         }
 
@@ -116,12 +117,12 @@
             textTable.AddCell("01234567", cellStyle);
 
             Assert.AreEqual(""
-                            + "+-------+--------+\n"
-                            + "|abcdef |123456  |\n"
-                            + "+-------+--------+\n"
-                            + "|mno    |45689   |\n"
-                            + "+-------+--------+\n"
-                            + "|xyztuvw|01234567|\n"
+                            + "+-------+--------+" + Environment.NewLine
+                            + "|abcdef |123456  |" + Environment.NewLine
+                            + "+-------+--------+" + Environment.NewLine
+                            + "|mno    |45689   |" + Environment.NewLine
+                            + "+-------+--------+" + Environment.NewLine
+                            + "|xyztuvw|01234567|" + Environment.NewLine
                             + "+-------+--------+", textTable.Render());
         }
 
@@ -142,12 +143,12 @@
             table.AddCell("01234567", cellStyle);
 
             Assert.AreEqual(""
-                            + "+------+-------+\n"
-                            + "|abcd  |123456 |\n"
-                            + "+------+-------+\n"
-                            + "|mno   |45689  |\n"
-                            + "+------+-------+\n"
-                            + "|xyztu |0123456|\n"
+                            + "+------+-------+" + Environment.NewLine
+                            + "|abcd  |123456 |" + Environment.NewLine
+                            + "+------+-------+" + Environment.NewLine
+                            + "|mno   |45689  |" + Environment.NewLine
+                            + "+------+-------+" + Environment.NewLine
+                            + "|xyztu |0123456|" + Environment.NewLine
                             + "+------+-------+", table.Render());
         }
 
@@ -167,12 +168,12 @@
             table.AddCell("xyztu", cellStyle);
 
             Assert.AreEqual(""
-                            + "+------+------+\n"
-                            + "|abcd  |123456|\n"
-                            + "+------+------+\n"
-                            + "|mno   |45689 |\n"
-                            + "+------+------+\n"
-                            + "|xyztu |      |\n"
+                            + "+------+------+" + Environment.NewLine
+                            + "|abcd  |123456|" + Environment.NewLine
+                            + "+------+------+" + Environment.NewLine
+                            + "|mno   |45689 |" + Environment.NewLine
+                            + "+------+------+" + Environment.NewLine
+                            + "|xyztu |      |" + Environment.NewLine
                             + "+------+------+", table.Render());
         }
 
@@ -193,9 +194,9 @@
             table.AddCell("Cell\r\nThree", csr);
 
             Assert.AreEqual(""
-                            + "+------+------+------+\n"
-                            + "|Cell  | Cell |  Cell|\n"
-                            + "|One   | Two  | Three|\n"
+                            + "+------+------+------+" + Environment.NewLine
+                            + "|Cell  | Cell |  Cell|" + Environment.NewLine
+                            + "|One   | Two  | Three|" + Environment.NewLine
                             + "+------+------+------+", table.Render());
         }
 
@@ -216,9 +217,9 @@
             table.AddCell("Cell-Three", csr);
 
             Assert.AreEqual(""
-                            + "+------+------+------+\n"
-                            + "|Cell  |Cell. | Cell-|\n"
-                            + "|One   | Two  | Three|\n"
+                            + "+------+------+------+" + Environment.NewLine
+                            + "|Cell  |Cell. | Cell-|" + Environment.NewLine
+                            + "|One   | Two  | Three|" + Environment.NewLine
                             + "+------+------+------+", table.Render());
         }
     }

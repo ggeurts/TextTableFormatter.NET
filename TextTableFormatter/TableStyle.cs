@@ -60,7 +60,7 @@ namespace TextTableFormatter
                 }
                 else
                 {
-                    sb.Append('\n');
+                    sb.AppendLine();
                 }
                 RenderRow(sb, r, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast);
 
@@ -138,7 +138,7 @@ namespace TextTableFormatter
 
             for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
             {
-                if (linesWritten > 0) sb.Append('\n');
+                if (linesWritten > 0) sb.AppendLine();
                 sb.Append(_prompt);
                 RenderRowContent(sb, columns, row, lineIndex);
                 linesWritten++;
@@ -148,7 +148,7 @@ namespace TextTableFormatter
             {
                 if (this.BorderVisibility.IsBottomBorderVisible)
                 {
-                    if (linesWritten > 0) sb.Append('\n');
+                    if (linesWritten > 0) sb.AppendLine();
                     sb.Append(_prompt);
                     this.BorderVisibility.RenderBottomBorder(sb, columns, BorderStyle, row);
                 }
