@@ -25,7 +25,10 @@ namespace TextTableFormatter
     {
         private const int DEFAULT_MIN_WIDTH = 0;
         private const int DEFAULT_MAX_WIDTH = int.MaxValue;
+
         private readonly TableStyle _tableStyle;
+        private readonly int _headerRowCount;
+        private readonly int _footerRowCount;
 
         internal IList<Row> Rows { get; private set; } = new List<Row>();
         internal IList<Column> Columns { get; private set; } = new List<Column>();
@@ -47,9 +50,9 @@ namespace TextTableFormatter
         /// <param name="borderStyle">The table border style</param>
         /// <param name="borderVisibility">The table visible borders</param>
         /// <param name="leftMargin">The table left margin</param>
-        public TextTable(TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0)
+        public TextTable(TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0, int headerRows = 0, int footerRows = 0)
         {
-            _tableStyle = new TableStyle(borderStyle, borderVisibility, leftMargin);
+            _tableStyle = new TableStyle(borderStyle, borderVisibility, leftMargin, headerRows, footerRows);
         }
 
         public TextTable AddColumns(int columnCount)

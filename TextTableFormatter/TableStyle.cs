@@ -22,6 +22,8 @@ namespace TextTableFormatter
     public class TableStyle
     {
         private readonly int _leftMargin;
+        private readonly int _headerRows;
+        private readonly int _footerRows;
 
         /// <summary>
         /// Gets the table border style
@@ -30,66 +32,44 @@ namespace TextTableFormatter
 
         public TableBorderVisibility BorderVisibility { get; }
 
-        internal TableStyle(TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0)
+        internal TableStyle(TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0, int headerRows = 0, int footerRows = 0)
         {
             this.BorderStyle = borderStyle ?? TableBorderStyle.CLASSIC;
             this.BorderVisibility = borderVisibility ?? TableBorderVisibility.SURROUND_HEADER_AND_COLUMNS;
             _leftMargin = Math.Max(leftMargin, 0);
+            _headerRows = Math.Max(headerRows, 1);
+            _footerRows = Math.Max(footerRows, 1);
         }
 
         internal IEnumerable<string> RenderLines(TextTable table)
         {
-            var rowCount = table.Rows.Count;
-            Row previousRow = null;
-            for (var i = 0; i < rowCount; i++)
+            for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
             {
-                var row = table.Rows[i];
-                var isFirst = i == 0;
-                var isSecond = i == 1;
-                var isLast = i == rowCount - 1;
-                var isIntermediate = i > 1 && !isLast;
-                foreach (var line in RenderRow(row, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast))
+                foreach (var line in RenderRow(table.Rows, rowIndex, table.Columns))
                 {
                     yield return line;
                 }
-                previousRow = row;
             }
         }
 
         internal string Render(TextTable table)
         {
             var sb = new StringBuilder();
-            var rowCount = table.Rows.Count;
-            Row previousRow = null;
-            var firstRenderedRow = true;
-            for (var i = 0; i < rowCount; i++)
+            for (var rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
             {
-                var r = table.Rows[i];
-                var isFirst = i == 0;
-                var isSecond = i == 1;
-                var isLast = i == rowCount - 1;
-                var isIntermediate = i > 1 && !isLast;
-
-                if (firstRenderedRow)
-                {
-                    firstRenderedRow = false;
-                }
-                else
-                {
-                    sb.AppendLine();
-                }
-                RenderRow(sb, r, previousRow, table.Columns, isFirst, isSecond, isIntermediate, isLast);
-
-                previousRow = r;
+                if (rowIndex > 0) sb.AppendLine();
+                RenderRow(sb, table.Rows, rowIndex, table.Columns);
             }
             return sb.ToString();
         }
 
-        private IEnumerable<string> RenderRow(Row row, Row previousRow, IList<Column> columns, bool isFirst, bool isSecond, bool isIntermediate, bool isLast)
+        private IEnumerable<string> RenderRow(IList<Row> rows, int rowIndex, IList<Column> columns)
         {
+            var row = rows[rowIndex];
             var sb = new StringBuilder(80).Append(' ', _leftMargin);
 
-            if (isFirst)
+            // Render border above row
+            if (rowIndex == 0)
             {
                 if (this.BorderVisibility.IsTopBorderVisible)
                 {
@@ -98,18 +78,14 @@ namespace TextTableFormatter
                     yield return sb.ToString();
                 }
             }
-            else
+            else if (IsMiddleBorderVisibleAbove(rowIndex, rows.Count))
             {
-                if (isIntermediate && this.BorderVisibility.IsMiddleSeparatorVisible 
-                    || isSecond && this.BorderVisibility.IsHeaderSeparatorVisible 
-                    || isLast && this.BorderVisibility.IsFooterSeparatorVisible)
-                {
-                    sb.Length = _leftMargin;
-                    this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, previousRow, row);
-                    yield return sb.ToString();
-                }
+                sb.Length = _leftMargin;
+                this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, rows[rowIndex - 1], row);
+                yield return sb.ToString();
             }
 
+            // Render row content
             for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
             {
                 sb.Length = _leftMargin;
@@ -117,7 +93,8 @@ namespace TextTableFormatter
                 yield return sb.ToString();
             }
 
-            if (isLast)
+            // For last row only, render border below row
+            if (rowIndex == rows.Count - 1)
             {
                 if (this.BorderVisibility.IsBottomBorderVisible)
                 {
@@ -128,10 +105,12 @@ namespace TextTableFormatter
             }
         }
 
-        private void RenderRow(StringBuilder sb, Row row, Row previousRow, IList<Column> columns, bool isFirst, bool isSecond, bool isIntermediate, bool isLast)
+        private void RenderRow(StringBuilder sb, IList<Row> rows, int rowIndex, IList<Column> columns)
         {
+            var row = rows[rowIndex];
+
             var linesWritten = 0;
-            if (isFirst)
+            if (rowIndex == 0)
             {
                 if (this.BorderVisibility.IsTopBorderVisible)
                 {
@@ -140,16 +119,11 @@ namespace TextTableFormatter
                     linesWritten++;
                 }
             }
-            else
+            else if (IsMiddleBorderVisibleAbove(rowIndex, rows.Count))
             {
-                if (isIntermediate && this.BorderVisibility.IsMiddleSeparatorVisible
-                    || isSecond && this.BorderVisibility.IsHeaderSeparatorVisible
-                    || isLast && this.BorderVisibility.IsFooterSeparatorVisible)
-                {
-                    sb.Append(' ', _leftMargin);
-                    this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, previousRow, row);
-                    linesWritten++;
-                }
+                sb.Append(' ', _leftMargin);
+                this.BorderVisibility.RenderMiddleSeparator(sb, columns, BorderStyle, rows[rowIndex - 1], row);
+                linesWritten++;
             }
 
             for (var lineIndex = 0; lineIndex < row.LineCount; lineIndex++)
@@ -160,7 +134,7 @@ namespace TextTableFormatter
                 linesWritten++;
             }
 
-            if (isLast)
+            if (rowIndex == rows.Count - 1)
             {
                 if (this.BorderVisibility.IsBottomBorderVisible)
                 {
@@ -224,6 +198,14 @@ namespace TextTableFormatter
 
             // Right border
             if (this.BorderVisibility.IsRightBorderVisible) sb.Append(BorderStyle.Right);
+        }
+
+        private bool IsMiddleBorderVisibleAbove(int rowIndex, int rowCount)
+        {
+            if (rowIndex <= 0 || rowIndex >= rowCount) return false;
+            if (_headerRows > 0 && rowIndex <= _headerRows) return this.BorderVisibility.IsHeaderSeparatorVisible;
+            if (_footerRows > 0 && rowIndex >= rowCount - _footerRows) return this.BorderVisibility.IsFooterSeparatorVisible;
+            return this.BorderVisibility.IsMiddleSeparatorVisible;
         }
     }
 }

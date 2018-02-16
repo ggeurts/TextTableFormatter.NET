@@ -222,5 +222,67 @@
                             + "|One   | Two  | Three|" + Environment.NewLine
                             + "+------+------+------+", table.Render());
         }
+
+        [Test]
+        [Category("TableTests")]
+        public void TestSingleRowHeaderAndFooterSeparators()
+        {
+            var table = new TextTable(TableBorderStyle.CLASSIC,
+                    TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+                .AddColumn()
+                .AddColumn();
+            table.AddCell("Title 1");
+            table.AddCell("Title 2");
+            table.AddCell("Data 1");
+            table.AddCell("Data 2");
+            table.AddCell("Data 3");
+            table.AddCell("Data 4");
+            table.AddCell("Footer 1");
+            table.AddCell("Footer 2");
+
+            Assert.AreEqual(""
+                            + "+--------+--------+" + Environment.NewLine
+                            + "|Title 1 |Title 2 |" + Environment.NewLine
+                            + "+--------+--------+" + Environment.NewLine
+                            + "|Data 1  |Data 2  |" + Environment.NewLine
+                            + "|Data 3  |Data 4  |" + Environment.NewLine
+                            + "+--------+--------+" + Environment.NewLine
+                            + "|Footer 1|Footer 2|" + Environment.NewLine
+                            + "+--------+--------+", table.Render());
+        }
+
+        [Test]
+        [Category("TableTests")]
+        public void TestMultipleRowHeaderAndFooterSeparators()
+        {
+            var table = new TextTable(TableBorderStyle.CLASSIC,
+                    TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS, headerRows: 2, footerRows: 2)
+                .AddColumn()
+                .AddColumn();
+            table.AddCell("Headers", columnSpan: 2);
+            table.AddCell("Title 1");
+            table.AddCell("Title 2");
+            table.AddCell("Data 1");
+            table.AddCell("Data 2");
+            table.AddCell("Data 3");
+            table.AddCell("Data 4");
+            table.AddCell("Footers", columnSpan: 2);
+            table.AddCell("Footer 1");
+            table.AddCell("Footer 2");
+
+            Assert.AreEqual(""
+                            + "+-----------------+" + Environment.NewLine
+                            + "|Headers          |" + Environment.NewLine
+                            + "+-----------------+" + Environment.NewLine
+                            + "|Title 1 |Title 2 |" + Environment.NewLine
+                            + "+--------+--------+" + Environment.NewLine
+                            + "|Data 1  |Data 2  |" + Environment.NewLine
+                            + "|Data 3  |Data 4  |" + Environment.NewLine
+                            + "+-----------------+" + Environment.NewLine
+                            + "|Footers          |" + Environment.NewLine
+                            + "+-----------------+" + Environment.NewLine
+                            + "|Footer 1|Footer 2|" + Environment.NewLine
+                            + "+--------+--------+", table.Render());
+        }
     }
 }

@@ -115,8 +115,7 @@ namespace TextTableFormatter
                 lowerRow, null, tiles.TopCenterCorner, tiles.CenterWidth);
         }
 
-        internal void RenderMiddleSeparator(StringBuilder sb, IList<Column> columns, TableBorderStyle tiles, Row upperRow,
-            Row lowerRow)
+        internal void RenderMiddleSeparator(StringBuilder sb, IList<Column> columns, TableBorderStyle tiles, Row upperRow, Row lowerRow)
         {
             RenderHorizontalSeparator(sb, columns, tiles.MiddleLeftCorner,
                 tiles.MiddleCenterCorner, tiles.MiddleRightCorner, tiles.Middle, upperRow,
