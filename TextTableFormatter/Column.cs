@@ -21,40 +21,64 @@ namespace TextTableFormatter
     {
         private readonly int _columnIndex;
         private readonly IList<Cell> _cells = new List<Cell>();
-        private readonly int _minWidth;
-        private readonly int _maxWidth;
+
+        public ColumnStyle Style { get; }
 
         public int ActualWidth { get; private set; }
 
-        internal Column(int columnIndex, int minWidth, int maxWidth)
+        public int MinWidth
         {
-            _columnIndex = columnIndex;
-            _minWidth = minWidth;
-            _maxWidth = maxWidth;
+            get { return this.Style.MinWidth; }
         }
 
-        internal void PerformLayout(IList<Column> columns, int separatorWidth)
+        public int MaxWidth
         {
-            var desiredWidth = _minWidth;
+            get { return this.Style.MaxWidth; }
+        }
+
+        internal Column(int columnIndex, ColumnStyle style)
+        {
+            _columnIndex = columnIndex;
+            this.Style = style ?? ColumnStyle.Default;
+        }
+
+        internal void PerformLayout(TextTable table, int separatorWidth)
+        {
+            var desiredWidth = this.MinWidth;
+
+            var rowCount = table.Rows.Count;
+            var rowIndex = 0;
             foreach (var cell in _cells)
             {
                 var cellOverlapWithPreviousColumns = 0;
 
                 if (cell.ColumnSpan > 1)
                 {
-                    for (var pos = _columnIndex - cell.ColumnSpan + 1; pos < _columnIndex; pos++)
+                    var firstColumnIndex = _columnIndex - cell.ColumnSpan + 1;
+                    for (var i = firstColumnIndex; i < _columnIndex; i++)
                     {
-                        cellOverlapWithPreviousColumns += columns[pos].ActualWidth + separatorWidth;
+                        cellOverlapWithPreviousColumns += table.Columns[i].ActualWidth + separatorWidth;
                     }
                 }
 
-                cell.PerformLayout(_maxWidth);
+                var cellStyle = cell.Style ?? table.Style.GetInheritedStyle(this.Style, rowIndex, rowCount);
+                var maxColumnWidth = this.MaxWidth;
+                int maxCellWidth;
+                checked
+                {
+                    maxCellWidth = maxColumnWidth < int.MaxValue
+                        ? maxColumnWidth + cellOverlapWithPreviousColumns
+                        : maxColumnWidth;
+                }
+                cell.PerformLayout(maxCellWidth, cellStyle);
 
                 var cellOverlap = cell.ActualWidth - cellOverlapWithPreviousColumns;
                 if (cellOverlap > desiredWidth)
                 {
                     desiredWidth = cellOverlap;
                 }
+
+                rowIndex++;
             }
 
             this.ActualWidth = desiredWidth;

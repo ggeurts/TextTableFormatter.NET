@@ -23,12 +23,7 @@ namespace TextTableFormatter
     /// </summary>
     public class TextTable
     {
-        private const int DEFAULT_MIN_WIDTH = 0;
-        private const int DEFAULT_MAX_WIDTH = int.MaxValue;
-
-        private readonly TableStyle _tableStyle;
-        private readonly int _headerRowCount;
-        private readonly int _footerRowCount;
+        public TableStyle Style { get; }
 
         internal IList<Row> Rows { get; private set; } = new List<Row>();
         internal IList<Column> Columns { get; private set; } = new List<Column>();
@@ -50,62 +45,47 @@ namespace TextTableFormatter
         /// <param name="borderStyle">The table border style</param>
         /// <param name="borderVisibility">The table visible borders</param>
         /// <param name="leftMargin">The table left margin</param>
-        public TextTable(TableBorderStyle borderStyle = null, TableBorderVisibility borderVisibility = null, int leftMargin = 0, int headerRows = 0, int footerRows = 0)
+        /// <param name="headerRows">The number of top rows that are to be styled as table headers.</param>
+        /// <param name="footerRows">The number of bottom rows that are to be styled as table footers.</param>
+        /// <param name="cellStyle">The default style for cells that are not contained by header or footer rows.</param>
+        /// <param name="headerStyle">The default style for cells that are contained by header rows.</param>
+        /// <param name="footerStyle">The default style for cells that are contained by footer rows.</param>
+        public TextTable(
+            TableBorderStyle borderStyle = null, 
+            TableBorderVisibility borderVisibility = null, 
+            int leftMargin = 0, 
+            int headerRows = 0, 
+            int footerRows = 0,
+            CellStyle cellStyle = null,
+            CellStyle headerStyle = null,
+            CellStyle footerStyle = null)
         {
-            _tableStyle = new TableStyle(borderStyle, borderVisibility, leftMargin, headerRows, footerRows);
+            this.Style = new TableStyle(borderStyle, borderVisibility, leftMargin, headerRows, footerRows, cellStyle, headerStyle, footerStyle);
         }
 
-        public TextTable AddColumns(int columnCount)
+        public TextTable AddColumn(ColumnStyle style = null)
         {
-            for (var i = 0; i < columnCount; i++) AddColumn();
+            this.Columns.Add(new Column(this.Columns.Count, style));
             return this;
         }
 
-        public TextTable AddColumn()
+        public TextTable AddColumns(int columnCount, ColumnStyle style = null)
         {
-            return AddColumn(DEFAULT_MIN_WIDTH, DEFAULT_MAX_WIDTH);
-        }
-
-        public TextTable AddColumn(int width)
-        {
-            return AddColumn(width, width);
-        }
-
-        public TextTable AddColumn(int minWidth, int maxWidth)
-        {
-            this.Columns.Add(new Column(this.Columns.Count, minWidth, maxWidth));
+            for (var i = 0; i < columnCount; i++) AddColumn(style);
             return this;
-        }
-
-        /// <summary>
-        /// Adds a cell with the given content
-        /// </summary>
-        /// <param name="content">The cell content</param>
-        public TextTable AddCell(string content)
-        {
-            return AddCell(content, new CellStyle());
-        }
-
-        /// <summary>
-        /// Adds a cell with the given content and column span
-        /// </summary>
-        /// <param name="content">The cell content</param>
-        /// <param name="columnSpan">The cell column span</param>
-        public TextTable AddCell(string content, int columnSpan)
-        {
-            return AddCell(content, new CellStyle(), columnSpan);
         }
 
         /// <summary>
         /// Adds a cell with a given content, a style and a column span.
         /// The cell will be arranged in a new row if necessary
         /// </summary>
-        /// <param name="content">The cell content</param>
-        /// <param name="style">The cell style</param>
-        /// <param name="columnSpan">The cell column span</param>
-        public TextTable AddCell(string content, CellStyle style, int columnSpan = 1)
+        /// <param name="content">The cell content.</param>
+        /// <param name="style">Optional cell style. A <c>null</c> value indicates that style 
+        /// is inherited from column and or table.</param>
+        /// <param name="columnSpan">Optional cell column span, defaults to <c>1</c>.</param>
+        public TextTable AddCell(object content = null, CellStyle style = null, int columnSpan = 1)
         {
-            if (columnSpan < 1) throw new ArgumentException("columnSpan must be greater or equal to 0");
+            if (columnSpan < 1) throw new ArgumentOutOfRangeException(nameof(columnSpan), "Column span must be greater than or equal to zero.");
 
             var rowCount = this.Rows.Count;
             var currentRow = rowCount == 0 
@@ -125,6 +105,32 @@ namespace TextTableFormatter
             return this;
         }
 
+        public TextTable AddCells(params object[] items)
+        {
+            if (items == null) throw new ArgumentNullException(nameof(items));
+
+            foreach (var item in items)
+            {
+                AddCell(item);
+            }
+            return this;
+        }
+
+        public TextTable AddCells<T>(IEnumerable<T> items, params Func<T, object>[] cellSelectors)
+        {
+            if (items == null) throw new ArgumentNullException(nameof(items));
+            if (cellSelectors == null) throw new ArgumentNullException(nameof(cellSelectors));
+
+            foreach (var item in items)
+            {
+                foreach (var cellSelector in cellSelectors)
+                {
+                    AddCell(cellSelector(item));
+                }
+            }
+            return this;
+        }
+
         /// <summary>
         /// Renders the table as a string
         /// </summary>
@@ -132,7 +138,7 @@ namespace TextTableFormatter
         public string Render()
         {
             PerformLayout();
-            return _tableStyle.Render(this);
+            return this.Style.Render(this);
         }
 
         /// <summary>
@@ -142,7 +148,7 @@ namespace TextTableFormatter
         public IEnumerable<string> RenderLines()
         {
             PerformLayout();
-            return _tableStyle.RenderLines(this);
+            return this.Style.RenderLines(this);
         }
 
         private void PerformLayout()
@@ -150,15 +156,15 @@ namespace TextTableFormatter
             // First we connect the columns with the cells.
             foreach (var row in Rows)
             {
-                var startCol = 0;
+                var columnIndex = 0;
                 foreach (var cell in row.Cells)
                 {
-                    var endCol = startCol + cell.ColumnSpan - 1;
+                    var endCol = columnIndex + cell.ColumnSpan - 1;
                     if (endCol < this.Columns.Count)
                     {
                         var col = Columns[endCol];
                         col.AddCell(cell);
-                        startCol = startCol + cell.ColumnSpan;
+                        columnIndex = columnIndex + cell.ColumnSpan;
                     }
                 }
             }
@@ -166,7 +172,7 @@ namespace TextTableFormatter
             // Then we calculate the appropriate column width for each one.
             foreach (var col in this.Columns)
             {
-                col.PerformLayout(Columns, _tableStyle.BorderStyle.TopCenterCorner.Length);
+                col.PerformLayout(this, this.Style.BorderStyle.TopCenterCorner.Length);
             }
         }
     }

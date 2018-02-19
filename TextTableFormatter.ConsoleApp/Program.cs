@@ -33,9 +33,8 @@
             // 2. ADVANCED TABLE EXAMPLE
             var numberStyleAdvancedTable = new CellStyle(CellTextAlignment.Right);
             var advancedTable = new TextTable(TableBorderStyle.DESIGN_FORMAL, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
-                .AddColumn(6, 14)
-                .AddColumn(4, 12)
-                .AddColumn(4, 12);
+                .AddColumn(new ColumnStyle(6, 14))
+                .AddColumns(2, new ColumnStyle(4, 12));
 
             advancedTable.AddCell("Region");
             advancedTable.AddCell("Orders", numberStyleAdvancedTable);

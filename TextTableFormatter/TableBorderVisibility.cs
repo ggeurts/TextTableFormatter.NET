@@ -108,25 +108,25 @@ namespace TextTableFormatter
             IsRightBorderVisible = Get(separatorsAndBordersToRender, 9);
         }
 
-        internal void RenderTopBorder(StringBuilder sb, IList<Column> columns, TableBorderStyle tiles, Row lowerRow)
+        internal void RenderTopBorder(StringBuilder sb, TextTable table, TableBorderStyle tiles, int rowIndex)
         {
-            RenderHorizontalSeparator(sb, columns, tiles.TopLeftCorner,
+            RenderHorizontalSeparator(sb, table.Columns, tiles.TopLeftCorner,
                 tiles.TopCenterCorner, tiles.TopRightCorner, tiles.Top, null,
-                lowerRow, null, tiles.TopCenterCorner, tiles.CenterWidth);
+                table.Rows[rowIndex], null, tiles.TopCenterCorner, tiles.CenterWidth);
         }
 
-        internal void RenderMiddleSeparator(StringBuilder sb, IList<Column> columns, TableBorderStyle tiles, Row upperRow, Row lowerRow)
+        internal void RenderMiddleSeparator(StringBuilder sb, TextTable table, TableBorderStyle tiles, int rowIndex)
         {
-            RenderHorizontalSeparator(sb, columns, tiles.MiddleLeftCorner,
-                tiles.MiddleCenterCorner, tiles.MiddleRightCorner, tiles.Middle, upperRow,
-                lowerRow, tiles.UpperColumnSpan, tiles.LowerColumnSpan,
+            RenderHorizontalSeparator(sb, table.Columns, tiles.MiddleLeftCorner,
+                tiles.MiddleCenterCorner, tiles.MiddleRightCorner, tiles.Middle, table.Rows[rowIndex - 1],
+                table.Rows[rowIndex], tiles.UpperColumnSpan, tiles.LowerColumnSpan,
                 tiles.CenterWidth);
         }
 
-        internal void RenderBottomBorder(StringBuilder sb, IList<Column> columns, TableBorderStyle tiles, Row upperRow)
+        internal void RenderBottomBorder(StringBuilder sb, TextTable table, TableBorderStyle tiles, int rowIndex)
         {
-            RenderHorizontalSeparator(sb, columns, tiles.BottomLeftCorner,
-                tiles.BottomCenterCorner, tiles.BottomRightCorner, tiles.Bottom, upperRow,
+            RenderHorizontalSeparator(sb, table.Columns, tiles.BottomLeftCorner,
+                tiles.BottomCenterCorner, tiles.BottomRightCorner, tiles.Bottom, table.Rows[rowIndex],
                 null, tiles.BottomCenterCorner, null, tiles.CenterWidth);
         }
 

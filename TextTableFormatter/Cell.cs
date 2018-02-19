@@ -23,11 +23,11 @@ namespace TextTableFormatter
     /// <summary>
     /// Represents a table cell
     /// </summary>
-    internal class Cell
+    public class Cell
     {
         private static readonly char[] LineEndChars = { '\r', '\n' };
 
-        private readonly string _content;
+        private readonly object _content;
 
         /// <summary>
         /// Gets the cell content lines
@@ -37,17 +37,22 @@ namespace TextTableFormatter
         /// <summary>
         /// Gets the cell style
         /// </summary>
-        public CellStyle Style { get; private set; }
+        public CellStyle Style { get; }
 
         /// <summary>
         /// Gets the cell column span
         /// </summary>
-        public int ColumnSpan { get; private set; }
+        public int ColumnSpan { get; }
 
         /// <summary>
         /// Gets the actual cell width as calculated during layout phase.
         /// </summary>
         internal int ActualWidth { get; private set; }
+
+        /// <summary>
+        /// Gets the actual cell style as calculated during layout phase.
+        /// </summary>
+        internal CellStyle ActualStyle { get; private set; }
 
         /// <summary>
         /// Gets the number of cell content lines.
@@ -71,21 +76,24 @@ namespace TextTableFormatter
             : this(null, new CellStyle())
         {}
 
-        public Cell(string content) 
-            : this(content, new CellStyle())
+        public Cell(object content) 
+            : this(content, null)
         {}
 
-        public Cell(string content, CellStyle style, int columnSpan = 1)
+        public Cell(object content, CellStyle style, int columnSpan = 1)
         {
             _content = content;
             this.Style = style;
             this.ColumnSpan = columnSpan;
         }
 
-        internal void PerformLayout(int maxWidth)
+        internal void PerformLayout(int maxWidth, CellStyle actualStyle)
         {
+            if (actualStyle == null) throw new ArgumentNullException(nameof(actualStyle));
+            this.ActualStyle = actualStyle;
+
             _lines.Clear();
-            AddLines(_lines, _content, maxWidth);
+            AddLines(maxWidth, actualStyle);
 
             var desiredWidth = 0;
             for (var i = 0; i < _lines.Count; i++)
@@ -98,31 +106,26 @@ namespace TextTableFormatter
 
         public string Render(int width)
         {
-            PerformLayout(width);
+            var actualStyle = this.Style ?? CellStyle.Default;
+            PerformLayout(width, actualStyle);
 
             var sb = new StringBuilder();
             for (var i = 0; i < this.LineCount; i++)
             {
-                Render(sb, width, i);
+                actualStyle.Render(sb, this[i], width);
             }
             return sb.ToString();
         }
 
-        public void Render(StringBuilder sb, int width, int lineIndex)
+        private void AddLines(int maxWidth, CellStyle actualStyle)
         {
-            var line = this[lineIndex];
-            if (lineIndex == 0 && string.IsNullOrEmpty(line)) line = this.Style.NullText;
-            this.Style.Render(sb, line, width);
-        }
-
-        private void AddLines(List<string> lines, string content, int maxWidth)
-        {
+            var content = actualStyle.GetContentLines(_content);
             if (string.IsNullOrEmpty(content)) return;
 
             var lineEndPos = content.IndexOfAny(LineEndChars);
             if (lineEndPos < 0)
             {
-                AddLinesWithTextWrapping(lines, content, maxWidth);
+                AddLinesWithTextWrapping(content, maxWidth, actualStyle);
                 return;
             }
 
@@ -130,18 +133,18 @@ namespace TextTableFormatter
             {
                 for (var line = sr.ReadLine(); line != null; line = sr.ReadLine())
                 {
-                    AddLinesWithTextWrapping(lines, line, maxWidth);
+                    AddLinesWithTextWrapping(line, maxWidth, actualStyle);
                 }
             }
         }
 
-        private void AddLinesWithTextWrapping(List<string> lines, string content, int maxWidth)
+        private void AddLinesWithTextWrapping(string content, int maxWidth, CellStyle actualStyle)
         {
             if (string.IsNullOrEmpty(content)) return;
 
-            if (content.Length <= maxWidth || this.Style.TextWrapping == CellTextWrapping.NoWrap)
+            if (content.Length <= maxWidth || actualStyle.TextWrapping == CellTextWrapping.NoWrap)
             {
-                lines.Add(content);
+                _lines.Add(content);
                 return;
             }
 
@@ -151,24 +154,24 @@ namespace TextTableFormatter
                 var lineEnd = LastIndexOfLineBreakOpportunity(content, lineBegin, maxWidth);
                 if (lineEnd < lineBegin)
                 {
-                    lines.Add(content.Substring(lineBegin, maxWidth));
+                    _lines.Add(content.Substring(lineBegin, maxWidth));
                     lineBegin += maxWidth;
                 }
                 else if (char.IsWhiteSpace(content[lineEnd]))
                 {
-                    lines.Add(content.Substring(lineBegin, lineEnd - lineBegin));
+                    _lines.Add(content.Substring(lineBegin, lineEnd - lineBegin));
                     lineBegin = lineEnd + 1;
                 }
                 else
                 {
-                    lines.Add(content.Substring(lineBegin, lineEnd + 1 - lineBegin));
+                    _lines.Add(content.Substring(lineBegin, lineEnd + 1 - lineBegin));
                     lineBegin = lineEnd + 1;
                 }
             }
 
             if (lineBegin < content.Length)
             {
-                lines.Add(content.Substring(lineBegin));
+                _lines.Add(content.Substring(lineBegin));
             }
         }
 

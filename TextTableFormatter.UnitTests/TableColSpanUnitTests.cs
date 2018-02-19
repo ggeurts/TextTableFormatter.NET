@@ -42,8 +42,8 @@ namespace TextTableFormatter.UnitTests
             var csr = new CellStyle(CellTextAlignment.Right);
             var csc = new CellStyle(CellTextAlignment.Center);
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
-                .AddColumn(6, 10)
-                .AddColumn(2, 7);
+                .AddColumn(new ColumnStyle(6, 10))
+                .AddColumn(new ColumnStyle(2, 7));
 
             table.AddCell("abcd", cs);
             table.AddCell("123456", cs);
@@ -70,9 +70,9 @@ namespace TextTableFormatter.UnitTests
             var cellStyle1 = new CellStyle();
 
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
-                .AddColumn(3, 10)
-                .AddColumn(2, 7)
-                .AddColumn(3, 10)
+                .AddColumn(new ColumnStyle(3, 10))
+                .AddColumn(new ColumnStyle(2, 7))
+                .AddColumn(new ColumnStyle(3, 10))
                 .AddColumn();
 
             table.AddCell("abcd", cellStyle1);
@@ -106,8 +106,8 @@ namespace TextTableFormatter.UnitTests
             var cellStyle1 = new CellStyle();
             var cellStyle2 = new CellStyle(CellTextAlignment.Right);
             var textTable = new TextTable(TableBorderStyle.CLASSIC_WIDE, TableBorderVisibility.ALL)
-                .AddColumn(6, 10)
-                .AddColumn(2, 7);
+                .AddColumn(new ColumnStyle(6, 10))
+                .AddColumn(new ColumnStyle(2, 7));
 
             textTable.AddCell("abcd", cellStyle1);
             textTable.AddCell("123456", cellStyle1);

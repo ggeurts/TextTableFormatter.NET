@@ -15,6 +15,7 @@
 
 namespace TextTableFormatter
 {
+    using System;
     using System.Text;
 
     /// <summary>
@@ -22,7 +23,14 @@ namespace TextTableFormatter
     /// </summary>
     public class CellStyle
     {
+        public static readonly CellStyle Default = new CellStyle();
+
         private const string DOTS_TEXT = "...";
+
+        /// <summary>
+        /// Gets format string for cell contents.
+        /// </summary>
+        public string Format { get; }
 
         /// <summary>
         /// Gets or sets the cell horizontal alignment
@@ -45,12 +53,30 @@ namespace TextTableFormatter
             CellTextAlignment textAlignment = CellTextAlignment.Left, 
             CellTextTrimming textTrimming = CellTextTrimming.Crop, 
             CellTextWrapping textWrapping = CellTextWrapping.NoWrap,
-            string nullText = null)
+            string nullText = null,
+            string format = null)
         {
             this.TextAlignment = textAlignment;
             this.TextTrimming = textTrimming;
             this.TextWrapping = textWrapping;
             this.NullText = nullText;
+            this.Format = format;
+        }
+
+        public string GetContentLines(object value)
+        {
+            if (value == null) return this.NullText;
+
+            var text = value as string;
+            if (text != null) return text.Length == 0 ? this.NullText : text;
+
+            if (this.Format == null) return value.ToString();
+            if (this.Format.Contains("{0")) return string.Format(this.Format, value);
+
+            var formattable = value as IFormattable;
+            return formattable != null
+                ? formattable.ToString(this.Format, null)
+                : value.ToString();
         }
 
         public void Render(StringBuilder sb, string line, int width)

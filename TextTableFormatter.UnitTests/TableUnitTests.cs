@@ -2,6 +2,7 @@
 {
     using System;
     using NUnit.Framework;
+    using NUnit.Framework.Constraints;
 
     [TestFixture]
     public class TableUnitTests
@@ -132,8 +133,8 @@
         {
             var cellStyle = new CellStyle();
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
-                .AddColumn(6, 10)
-                .AddColumn(2, 7);
+                .AddColumn(new ColumnStyle(6, 10))
+                .AddColumn(new ColumnStyle(2, 7));
 
             table.AddCell("abcd", cellStyle);
             table.AddCell("123456", cellStyle);
@@ -158,8 +159,8 @@
         {
             var cellStyle = new CellStyle();
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
-                .AddColumn(6, 10)
-                .AddColumn(2, 7);
+                .AddColumn(new ColumnStyle(6, 10))
+                .AddColumn(new ColumnStyle(2, 7));
 
             table.AddCell("abcd", cellStyle);
             table.AddCell("123456", cellStyle);
@@ -185,9 +186,7 @@
             var csc = new CellStyle(CellTextAlignment.Center);
             var csr = new CellStyle(CellTextAlignment.Right);
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
-                .AddColumn(6, 6)
-                .AddColumn(6, 6)
-                .AddColumn(6, 6);
+                .AddColumns(3, new ColumnStyle(6));
 
             table.AddCell("Cell\nOne", csl);
             table.AddCell("Cell\rTwo", csc);
@@ -208,9 +207,7 @@
             var csc = new CellStyle(CellTextAlignment.Center, textWrapping: CellTextWrapping.Wrap);
             var csr = new CellStyle(CellTextAlignment.Right, textWrapping: CellTextWrapping.Wrap);
             var table = new TextTable(TableBorderStyle.CLASSIC, TableBorderVisibility.ALL)
-                .AddColumn(6, 6)
-                .AddColumn(6, 6)
-                .AddColumn(6, 6);
+                .AddColumns(3, new ColumnStyle(6));
 
             table.AddCell("Cell One", csl);
             table.AddCell("Cell.Two", csc);
@@ -229,16 +226,11 @@
         {
             var table = new TextTable(TableBorderStyle.CLASSIC,
                     TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
-                .AddColumn()
-                .AddColumn();
-            table.AddCell("Title 1");
-            table.AddCell("Title 2");
-            table.AddCell("Data 1");
-            table.AddCell("Data 2");
-            table.AddCell("Data 3");
-            table.AddCell("Data 4");
-            table.AddCell("Footer 1");
-            table.AddCell("Footer 2");
+                .AddColumns(2)
+                .AddCells("Title 1", "Title 2")
+                .AddCells("Data 1", "Data 2")
+                .AddCells("Data 3", "Data 4")
+                .AddCells("Footer 1", "Footer 2");
 
             Assert.AreEqual(""
                             + "+--------+--------+" + Environment.NewLine
@@ -257,18 +249,13 @@
         {
             var table = new TextTable(TableBorderStyle.CLASSIC,
                     TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS, headerRows: 2, footerRows: 2)
-                .AddColumn()
-                .AddColumn();
-            table.AddCell("Headers", columnSpan: 2);
-            table.AddCell("Title 1");
-            table.AddCell("Title 2");
-            table.AddCell("Data 1");
-            table.AddCell("Data 2");
-            table.AddCell("Data 3");
-            table.AddCell("Data 4");
-            table.AddCell("Footers", columnSpan: 2);
-            table.AddCell("Footer 1");
-            table.AddCell("Footer 2");
+                .AddColumns(2)
+                .AddCell("Headers", columnSpan: 2)
+                .AddCells("Title 1", "Title 2")
+                .AddCells("Data 1", "Data 2")
+                .AddCells("Data 3", "Data 4")
+                .AddCell("Footers", columnSpan: 2)
+                .AddCells("Footer 1", "Footer 2");
 
             Assert.AreEqual(""
                             + "+-----------------+" + Environment.NewLine
@@ -283,6 +270,58 @@
                             + "+-----------------+" + Environment.NewLine
                             + "|Footer 1|Footer 2|" + Environment.NewLine
                             + "+--------+--------+", table.Render());
+        }
+
+        [Test]
+        public void TestInheritedColumnStyle()
+        {
+            var table = new TextTable(TableBorderStyle.CLASSIC,
+                    TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+                .AddColumn(new ColumnStyle(10, 
+                    cellStyle: new CellStyle(CellTextAlignment.Right), 
+                    headerStyle: new CellStyle(CellTextAlignment.Center),
+                    footerStyle: new CellStyle(CellTextAlignment.Left)))
+                .AddCell("Title")
+                .AddCell("Data 1")
+                .AddCell("Data 2")
+                .AddCell("Footer");
+
+            Assert.AreEqual(""
+                            + "+----------+" + Environment.NewLine
+                            + "|  Title   |" + Environment.NewLine
+                            + "+----------+" + Environment.NewLine
+                            + "|    Data 1|" + Environment.NewLine
+                            + "|    Data 2|" + Environment.NewLine
+                            + "+----------+" + Environment.NewLine
+                            + "|Footer    |" + Environment.NewLine
+                            + "+----------+", table.Render());
+
+        }
+
+        [Test]
+        public void TestInheritedTableStyle()
+        {
+            var table = new TextTable(TableBorderStyle.CLASSIC,
+                    TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS,
+                    cellStyle: new CellStyle(CellTextAlignment.Right),
+                    headerStyle: new CellStyle(CellTextAlignment.Center),
+                    footerStyle: new CellStyle(CellTextAlignment.Left))
+                .AddColumn(new ColumnStyle(10))
+                .AddCell("Title")
+                .AddCell("Data 1")
+                .AddCell("Data 2")
+                .AddCell("Footer");
+
+            Assert.AreEqual(""
+                            + "+----------+" + Environment.NewLine
+                            + "|  Title   |" + Environment.NewLine
+                            + "+----------+" + Environment.NewLine
+                            + "|    Data 1|" + Environment.NewLine
+                            + "|    Data 2|" + Environment.NewLine
+                            + "+----------+" + Environment.NewLine
+                            + "|Footer    |" + Environment.NewLine
+                            + "+----------+", table.Render());
+
         }
     }
 }
