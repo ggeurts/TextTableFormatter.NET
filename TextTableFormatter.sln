@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextTableFormatter", "TextTableFormatter\TextTableFormatter.csproj", "{1AB82B2C-FED9-491B-BC69-118D7CDFB280}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextTableFormatter.ConsoleApp", "TextTableFormatter.ConsoleApp\TextTableFormatter.ConsoleApp.csproj", "{FD50F234-3FF8-48D3-871C-F087C5553CE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextTableFormatter.UnitTests", "TextTableFormatter.UnitTests\TextTableFormatter.UnitTests.csproj", "{B9A436C4-62DB-4C4D-A621-8DC4BFC31E77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{680DBFC1-699A-4EE0-8985-1015DD054917}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6479BADF-74F9-4F32-93B0-55F826DB8E08}
 	EndGlobalSection
 EndGlobal

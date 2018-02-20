@@ -1,60 +1,56 @@
 # TextTableFormatter.NET
 
-<p><strong>Project Description</strong></p>
-<p>TextTableFormatter is a .NET porting of <a title="Java Text Table Formatter" href="http://texttablefmt.sourceforge.net/" target="_blank"> Java TextTableFormatter</a>.&nbsp;<br /> This library&nbsp;renders&nbsp;tables made of characters. The user add cells and can add format characteristics like predefined/custom table styles, text alignment, abbreviation, column width, border types, colspan, etc. <br />Also available on <a href="https://www.nuget.org/packages/TextTableFormatter.NET/" target="_blank">NuGet</a>.</p>
+## Project Description
+TextTableFormatter is a .NET port of [Java TextTableFormatter](http://texttablefmt.sourceforge.net/). 
+This library renders tables made of characters. The user add cells and can add format characteristics 
+like predefined/custom table styles, text alignment, abbreviation, column width, border types, colspan, 
+etc.
 
-<p><img src="https://dariosantarelli.files.wordpress.com/2013/03/209137.jpg" alt="Screenshot" /></p>
-<p><br /> <strong>Some code examples</strong></p>
-<pre><span style="color: green;">// 1. BASIC TABLE EXAMPLE
-</span><span style="color: blue;">var </span><span style="color: black;">basicTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">TextTable</span><span style="color: black;">(3);
-basicTable.AddCell(</span><span style="color: #a31515;">"Artist"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"Album"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"Year"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"Jamiroquai"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"Emergency on Planet Earth"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"1993"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"Jamiroquai"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"The Return of the Space Cowboy"</span><span style="color: black;">);
-basicTable.AddCell(</span><span style="color: #a31515;">"1994"</span><span style="color: black;">);
-</span><span style="color: #2b91af;">Console</span><span style="color: black;">.WriteLine(basicTable.Render());
+Also available on [Nuget](https://www.nuget.org/packages/TextTableFormatter.NET/).
 
-</span><span style="color: green;">// +----------+-------------------------------+-----+
+![Screenshot](https://dariosantarelli.files.wordpress.com/2013/03/209137.jpg)
+
+## Some code examples
+
+```C#
+// 1. BASIC TABLE EXAMPLE
+var basicTable = new TextTable()
+    .AddColumns(3);
+    .AddCell("Artist")
+    .AddCell("Album")
+    .AddCell("Year")
+    .AddCell("Jamiroquai")
+    .AddCell("Emergency on Planet Earth")
+    .AddCell("1993")
+    .AddCell("Jamiroquai")
+    .AddCell("The Return of the Space Cowboy")
+    .AddCell("1994");
+
+Console.WriteLine(basicTable.Render());
+
+// +----------+-------------------------------+-----+
 // |Artist    |Album                          |Year |
 // +----------+-------------------------------+-----+
 // |Jamiroquai|Emergency on Planet Earth      |1993 |
 // |Jamiroquai|The Return of the Space Cowboy |1994 |
 // +----------+-------------------------------+-----+
 
-
 // 2. ADVANCED TABLE EXAMPLE
-</span><span style="color: blue;">var </span><span style="color: black;">numberStyleAdvancedTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">CellStyle</span><span style="color: black;">(</span><span style="color: #2b91af;">CellHorizontalAlignment</span><span style="color: black;">.Right);
-</span><span style="color: blue;">var </span><span style="color: black;">advancedTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">TextTable</span><span style="color: black;">(3, </span><span style="color: #2b91af;">TableBordersStyle</span><span style="color: black;">.DESIGN_FORMAL, </span><span style="color: #2b91af;">TableVisibleBorders</span><span style="color: black;">.SURROUND_HEADER_FOOTER_AND_COLUMNS);
-advancedTable.SetColumnWidthRange(0, 6, 14);
-advancedTable.SetColumnWidthRange(1, 4, 12);
-advancedTable.SetColumnWidthRange(2, 4, 12);
+var numberStyleAdvancedTable = new CellStyle(CellTextAlignment.Right);
+var advancedTable = new TextTable(TableBorderStyle.DESIGN_FORMAL, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+    .AddColumn(new ColumnStyle(6, 14))
+    .AddColumn(new ColumnStyle(4, 12, numberStyleAdvancedTable))
+    .AddColumn(new ColumnStyle(4, 12, numberStyleAdvancedTable))
+    .AddCells("Region", "Orders", "Sales")
+    .AddCells("North", "6,345", "$87.230")
+    .AddCells("Center", "837", "$12.855")
+    .AddCells("South", "5,344", "$72.561")
+    .AddCell("Total", numberStyleAdvancedTable, 2)
+    .AddCell("$172.646");
 
-advancedTable.AddCell(</span><span style="color: #a31515;">"Region"</span><span style="color: black;">);
-advancedTable.AddCell(</span><span style="color: #a31515;">"Orders"</span><span style="color: black;">, numberStyleAdvancedTable);
-advancedTable.AddCell(</span><span style="color: #a31515;">"Sales"</span><span style="color: black;">, numberStyleAdvancedTable);
+Console.WriteLine(advancedTable.Render());
 
-advancedTable.AddCell(</span><span style="color: #a31515;">"North"</span><span style="color: black;">);
-advancedTable.AddCell(</span><span style="color: #a31515;">"6,345"</span><span style="color: black;">, numberStyleAdvancedTable);
-advancedTable.AddCell(</span><span style="color: #a31515;">"$87.230"</span><span style="color: black;">, numberStyleAdvancedTable);
-
-advancedTable.AddCell(</span><span style="color: #a31515;">"Center"</span><span style="color: black;">);
-advancedTable.AddCell(</span><span style="color: #a31515;">"837"</span><span style="color: black;">, numberStyleAdvancedTable);
-advancedTable.AddCell(</span><span style="color: #a31515;">"$12.855"</span><span style="color: black;">, numberStyleAdvancedTable);
-
-advancedTable.AddCell(</span><span style="color: #a31515;">"South"</span><span style="color: black;">);
-advancedTable.AddCell(</span><span style="color: #a31515;">"5,344"</span><span style="color: black;">, numberStyleAdvancedTable);
-advancedTable.AddCell(</span><span style="color: #a31515;">"$72.561"</span><span style="color: black;">, numberStyleAdvancedTable);
-
-advancedTable.AddCell(</span><span style="color: #a31515;">"Total"</span><span style="color: black;">, numberStyleAdvancedTable, 2);
-advancedTable.AddCell(</span><span style="color: #a31515;">"$172.646"</span><span style="color: black;">, numberStyleAdvancedTable);
-
-</span><span style="color: #2b91af;">Console</span><span style="color: black;">.WriteLine(advancedTable.Render());
-
-</span><span style="color: green;">// ======================
+// ======================
 // Region Orders    Sales
 // ------ ------ --------
 // North   6,345  $87.230
@@ -66,31 +62,21 @@ advancedTable.AddCell(</span><span style="color: #a31515;">"$172.646"</span><spa
 
 
 // 3. FANCY TABLE EXAMPLE
-</span><span style="color: blue;">var </span><span style="color: black;">numberStyleFancyTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">CellStyle</span><span style="color: black;">(</span><span style="color: #2b91af;">CellHorizontalAlignment</span><span style="color: black;">.Right);
-</span><span style="color: blue;">var </span><span style="color: black;">fancyTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">TextTable</span><span style="color: black;">(3, </span><span style="color: #2b91af;">TableBordersStyle</span><span style="color: black;">.DESIGN_PAPYRUS, </span><span style="color: #2b91af;">TableVisibleBorders</span><span style="color: black;">.SURROUND_HEADER_FOOTER_AND_COLUMNS);
+var numberStyleFancyTable = new CellStyle(CellTextAlignment.Right);
+var fancyTable = new TextTable(TableBorderStyle.DESIGN_PAPYRUS, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+    .AddColumn()
+    .AddColumn(cellStyle: numberStyleFancyTable)
+    .AddColumn(cellStyle: numberStyleFancyTable)
+    .AddCells("Region", "Orders", "Sales")
+    .AddCells("North", "6,345", "$87.230")
+    .AddCells("Center", "837", "$12.855")
+    .AddCells("South", "5,344", "$72.561")
+    .AddCell("Total", numberStyleFancyTable, 2);
+    .AddCell("$172.646");
 
-fancyTable.AddCell(</span><span style="color: #a31515;">"Region"</span><span style="color: black;">);
-fancyTable.AddCell(</span><span style="color: #a31515;">"Orders"</span><span style="color: black;">, numberStyleFancyTable);
-fancyTable.AddCell(</span><span style="color: #a31515;">"Sales"</span><span style="color: black;">, numberStyleFancyTable);
+Console.WriteLine(fancyTable.Render());
 
-fancyTable.AddCell(</span><span style="color: #a31515;">"North"</span><span style="color: black;">);
-fancyTable.AddCell(</span><span style="color: #a31515;">"6,345"</span><span style="color: black;">, numberStyleFancyTable);
-fancyTable.AddCell(</span><span style="color: #a31515;">"$87.230"</span><span style="color: black;">, numberStyleFancyTable);
-
-fancyTable.AddCell(</span><span style="color: #a31515;">"Center"</span><span style="color: black;">);
-fancyTable.AddCell(</span><span style="color: #a31515;">"837"</span><span style="color: black;">, numberStyleFancyTable);
-fancyTable.AddCell(</span><span style="color: #a31515;">"$12.855"</span><span style="color: black;">, numberStyleFancyTable);
-
-fancyTable.AddCell(</span><span style="color: #a31515;">"South"</span><span style="color: black;">);
-fancyTable.AddCell(</span><span style="color: #a31515;">"5,344"</span><span style="color: black;">, numberStyleFancyTable);
-fancyTable.AddCell(</span><span style="color: #a31515;">"$72.561"</span><span style="color: black;">, numberStyleFancyTable);
-
-fancyTable.AddCell(</span><span style="color: #a31515;">"Total"</span><span style="color: black;">, numberStyleFancyTable, 2);
-fancyTable.AddCell(</span><span style="color: #a31515;">"$172.646"</span><span style="color: black;">, numberStyleFancyTable);
-
-</span><span style="color: #2b91af;">Console</span><span style="color: black;">.WriteLine(fancyTable.Render());
-
-</span><span style="color: green;">// o~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~o
+// o~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~o
 //  )  Region  Orders     Sales  (
 //  )  ~~~~~~  ~~~~~~  ~~~~~~~~  (
 //  )  North    6,345   $87.230  (
@@ -102,40 +88,29 @@ fancyTable.AddCell(</span><span style="color: #a31515;">"$172.646"</span><span s
 
 
 // 4. UNICODE TABLE EXAMPLE
-</span><span style="color: blue;">var </span><span style="color: black;">numberStyleUnicodeTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">CellStyle</span><span style="color: black;">(</span><span style="color: #2b91af;">CellHorizontalAlignment</span><span style="color: black;">.Right);
-</span><span style="color: blue;">var </span><span style="color: black;">unicodeTable = </span><span style="color: blue;">new </span><span style="color: #2b91af;">TextTable</span><span style="color: black;">(3, </span><span style="color: #2b91af;">TableBordersStyle</span><span style="color: black;">.UNICODE_BOX_DOUBLE_BORDER_WIDE, </span><span style="color: #2b91af;">TableVisibleBorders</span><span style="color: black;">.SURROUND_HEADER_FOOTER_AND_COLUMNS, </span><span style="color: blue;">true</span><span style="color: black;">);
-
-unicodeTable.AddCell(</span><span style="color: #a31515;">"Region"</span><span style="color: black;">);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"Orders"</span><span style="color: black;">, numberStyleUnicodeTable);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"Sales"</span><span style="color: black;">, numberStyleUnicodeTable);
-
-unicodeTable.AddCell(</span><span style="color: #a31515;">"North"</span><span style="color: black;">);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"6,345"</span><span style="color: black;">, numberStyleUnicodeTable);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"$87.230"</span><span style="color: black;">, numberStyleUnicodeTable);
-
-unicodeTable.AddCell(</span><span style="color: #a31515;">"Center"</span><span style="color: black;">);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"837"</span><span style="color: black;">, numberStyleUnicodeTable);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"$12.855"</span><span style="color: black;">, numberStyleUnicodeTable);
-
-unicodeTable.AddCell(</span><span style="color: #a31515;">"South"</span><span style="color: black;">);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"5,344"</span><span style="color: black;">, numberStyleUnicodeTable);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"$72.561"</span><span style="color: black;">, numberStyleUnicodeTable);
-
-unicodeTable.AddCell(</span><span style="color: #a31515;">"Total"</span><span style="color: black;">, numberStyleUnicodeTable, 2);
-unicodeTable.AddCell(</span><span style="color: #a31515;">"$172.646"</span><span style="color: black;">, numberStyleUnicodeTable);
+var numberStyleUnicodeTable = new CellStyle(CellTextAlignment.Right);
+var unicodeTable = new TextTable(TableBorderStyle.UNICODE_BOX_DOUBLE_BORDER_WIDE, TableBorderVisibility.SURROUND_HEADER_FOOTER_AND_COLUMNS)
+    .AddColumn()
+    .AddColumn(cellStyle: numberStyleUnicodeTable)
+    .AddColumn(cellStyle: numberStyleUnicodeTable)
+    .AddCells("Region", "Orders", "Sales")
+    .AddCells("North", "6,345", "$87.230")
+    .AddCells("Center", "837", "$12.855")
+    .AddCells("South", "5,344", "$72.561")
+    .AddCell("Total", numberStyleUnicodeTable, 2);
+    .AddCell("$172.646");
            
-</span><span style="color: blue;">var </span><span style="color: black;">unicodeTableStringArray = unicodeTable.RenderAsStringArray();
-</span><span style="color: blue;">var </span><span style="color: black;">sb = </span><span style="color: blue;">new </span><span style="color: #2b91af;">StringBuilder</span><span style="color: black;">(</span><span style="color: #a31515;">"&lt;html&gt;&lt;body&gt;&lt;pre&gt;"</span><span style="color: black;">);
-</span><span style="color: blue;">foreach </span><span style="color: black;">(</span><span style="color: blue;">string </span><span style="color: black;">line </span><span style="color: blue;">in </span><span style="color: black;">unicodeTableStringArray) 
+var sb = new StringBuilder("<html><body><pre>");
+foreach (string line in unicodeTable.RenderLines()) 
 {
-    sb.Append(line);
-    sb.Append(</span><span style="color: #a31515;">"&lt;br&gt;"</span><span style="color: black;">);
+    sb.Append(WebUtility.HtmlEncode(line));
+    sb.Append("<br>");
 }
-sb.Append(</span><span style="color: #a31515;">"&lt;/pre&gt;&lt;/html&gt;"</span><span style="color: black;">);
+sb.Append("</pre></body></html>");
 
-</span><span style="color: #2b91af;">File</span><span style="color: black;">.WriteAllText(</span><span style="color: #a31515;">"unicode.html"</span><span style="color: black;">, sb.ToString(), </span><span style="color: #2b91af;">Encoding</span><span style="color: black;">.UTF8);
+File.WriteAllText("unicode.html", sb.ToString(), Encoding.UTF8);
 
-</span><span style="color: green;">// unicode.html
+// unicode.html
 // ╔════════╤════════╤══════════╗
 // ║ Region │ Orders │    Sales ║
 // ╟────────┼────────┼──────────╢
@@ -144,8 +119,9 @@ sb.Append(</span><span style="color: #a31515;">"&lt;/pre&gt;&lt;/html&gt;"</span
 // ║ South  │  5,344 │  $72.561 ║
 // ╟────────┴────────┼──────────╢
 // ║           Total │ $172.646 ║
-// ╚═════════════════╧══════════╝</span></pre>
+// ╚═════════════════╧══════════╝
+```
 
-# License
+## License
 
 [Apache License Version 2.0](https://github.com/dsantarelli/TextTableFormatter.NET/blob/master/LICENSE.md)
